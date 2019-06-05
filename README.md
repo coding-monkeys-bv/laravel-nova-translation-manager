@@ -26,10 +26,10 @@ Please see the docs for more information.
 The Laravel Vue I18N Generator package is optional and should be installed manually.
 
 ## About Voicecode B.V.
-Voicecode B.V.
-Faradaystraat 11
-2014 EN Haarlem
-The Netherlands
+Voicecode B.V.  
+Faradaystraat 11   
+2014 EN Haarlem  
+The Netherlands  
 
 [Laravel Translation Manager]: https://github.com/barryvdh/laravel-translation-manager
 [Laravel Vue I18N Generator]: https://github.com/martinlindhe/laravel-vue-i18n-generator
