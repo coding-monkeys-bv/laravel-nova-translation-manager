@@ -9,8 +9,8 @@ use Barryvdh\TranslationManager\Manager;
 use Voicecode\NovaTranslationManager\Models\Translation;
 
 class TranslationsController extends Controller
-{    
-    /** 
+{
+    /**
      * @var \Barryvdh\TranslationManager\Manager
      */
     protected $manager;
@@ -27,7 +27,7 @@ class TranslationsController extends Controller
      */
     public function index()
     {
-        $groups = Translation::groupBy('group')->orderBy('group')->pluck('group');        
+        $groups = Translation::groupBy('group')->orderBy('group')->pluck('group');
 
         return response()->json($groups);
     }
@@ -50,7 +50,35 @@ class TranslationsController extends Controller
      */
     public function store()
     {
-        //
+        $data = request()->validate([
+            'group' => 'required|string',
+            'keywords' => 'required',
+        ]);
+
+        // Create separate keywords from request data.
+        $keys = explode("\n", request('keywords'));
+
+        // Get supported locales.
+        $locales = Translation::groupBy('locale')->pluck('locale')->toArray();
+
+        foreach ($keys as $key) {
+
+            // Make sure no spaces are added.
+            $key = trim($key);
+
+            // Add the keyword for all locales.
+            foreach ($locales as $locale) {
+                Translation::firstOrCreate([
+                    'locale' => $locale,
+                    'group' => $data['group'],
+                    'key' => $key,
+                ]);
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+        ]);
     }
 
     /**
@@ -67,7 +95,7 @@ class TranslationsController extends Controller
         $translations = [];
 
         // Group translations by key.
-        foreach($data as $translation){
+        foreach ($data as $translation) {
             $translations[$translation->key][$translation->locale] = $translation;
         }
 
@@ -99,6 +127,9 @@ class TranslationsController extends Controller
             'id' => 'required|numeric|min:1',
             'value' => 'nullable|string',
         ]);
+
+        // If an empty string is given, make sure it's null.
+        $data['value'] = ($data['value'] == '') ? null : $data['value'];
         
         // Update the translation.
         $translation->update($data);
@@ -133,8 +164,7 @@ class TranslationsController extends Controller
         $this->manager->exportTranslations($data['group']);
 
         // When JSON files should be generated using the vue-i18n package.
-        if(config('nova-translation-manager.vue-i18n.active')) {
-
+        if (config('nova-translation-manager.vue-i18n.active')) {
             $job = 'vue-i18n:generate';
             
             // When the file should be formatted with the --umd flag.

@@ -68,14 +68,13 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(1);
-module.exports = __webpack_require__(11);
+module.exports = __webpack_require__(6);
 
 
 /***/ }),
 /* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
 Nova.booting(function (Vue, router, store) {
 
     Vue.config.devtools = true;
@@ -92,11 +91,11 @@ Nova.booting(function (Vue, router, store) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(8)
+var normalizeComponent = __webpack_require__(3)
 /* script */
-var __vue_script__ = __webpack_require__(9)
+var __vue_script__ = __webpack_require__(4)
 /* template */
-var __vue_template__ = __webpack_require__(10)
+var __vue_template__ = __webpack_require__(5)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -135,12 +134,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 3 */,
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */
+/* 3 */
 /***/ (function(module, exports) {
 
 /* globals __VUE_SSR_CONTEXT__ */
@@ -249,7 +243,7 @@ module.exports = function normalizeComponent (
 
 
 /***/ }),
-/* 9 */
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -334,7 +328,40 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 
@@ -349,10 +376,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             group: null,
             groups: [],
             selectedGroup: null,
+            keywords: null,
             locales: [],
-            modalOpen: false,
             selected: {},
             translations: [],
+            createModalOpened: false,
+            updateModalOpened: false,
             apiUrl: '/voicecode/nova-translation-manager/'
         };
     },
@@ -363,14 +392,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
     methods: {
-        showModal: function showModal(data) {
-            this.selected = Object.assign({}, data);
-            this.modalOpen = true;
-        },
-        closeModal: function closeModal() {
-            this.selected = Object.assign({}, {});
-            this.modalOpen = false;
-        },
         getGroups: function getGroups() {
             var _this = this;
 
@@ -392,8 +413,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.translations = response.data;
             });
         },
-        updateTranslation: function updateTranslation() {
+        createKeywords: function createKeywords() {
             var _this4 = this;
+
+            // Setup data.
+            var data = {};
+            data.group = this.group;
+            data.keywords = this.keywords;
+
+            axios.post(this.apiUrl + 'translations', data).then(function (response) {
+
+                // Close the modal.
+                _this4.closeCreateModal();
+
+                // Show message.
+                _this4.$toasted.show('The translation has been updated!', { type: 'success' });
+            });
+        },
+        updateTranslation: function updateTranslation() {
+            var _this5 = this;
 
             // Setup data.
             var data = {};
@@ -403,17 +441,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.put(this.apiUrl + 'translations/' + this.selected.id, data).then(function (response) {
 
                 // Close the modal.
-                _this4.closeModal();
+                _this5.closeUpdateModal();
 
                 // Make sure the data is being refreshed.
-                _this4.setGroup(_this4.group);
+                _this5.setGroup(_this5.group);
 
                 // Show message.
-                _this4.$toasted.show('The translation has been updated!', { type: 'success' });
+                _this5.$toasted.show('The translation has been updated!', { type: 'success' });
             });
         },
         exportTranslations: function exportTranslations() {
-            var _this5 = this;
+            var _this6 = this;
 
             // Setup data.
             var data = {};
@@ -421,14 +459,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.post(this.apiUrl + 'translations/export', data).then(function (response) {
                 // Show message.
-                _this5.$toasted.show('The translations have been exported!', { type: 'success' });
+                _this6.$toasted.show('The translations have been exported!', { type: 'success' });
             });
+        },
+        openCreateModal: function openCreateModal() {
+            this.createModalOpened = true;
+        },
+        closeCreateModal: function closeCreateModal() {
+            this.keywords = null;
+            this.createModalOpened = false;
+        },
+        openUpdateModal: function openUpdateModal(data) {
+            this.selected = Object.assign({}, data);
+            this.updateModalOpened = true;
+        },
+        closeUpdateModal: function closeUpdateModal() {
+            this.selected = Object.assign({}, {});
+            this.updateModalOpened = false;
         }
     }
 });
 
 /***/ }),
-/* 10 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -505,6 +558,25 @@ var render = function() {
                   ]
                 )
               : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "ml-4" }, [
+            _vm.groupSelected
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default btn-primary",
+                    on: { click: _vm.openCreateModal }
+                  },
+                  [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(_vm.__("Add Keyword")) +
+                        "\n                "
+                    )
+                  ]
+                )
+              : _vm._e()
           ])
         ])
       ]),
@@ -542,12 +614,13 @@ var render = function() {
                           {
                             on: {
                               click: function($event) {
-                                return _vm.showModal(translation[locale])
+                                return _vm.openUpdateModal(translation[locale])
                               }
                             }
                           },
                           [
-                            translation[locale]
+                            translation[locale] &&
+                            translation[locale].value !== null
                               ? _c("span", { staticClass: "cursor-pointer" }, [
                                   translation[locale].value.length > 80
                                     ? _c("span", [
@@ -592,7 +665,7 @@ var render = function() {
             "transition",
             { attrs: { name: "fade" } },
             [
-              _vm.modalOpen
+              _vm.updateModalOpened
                 ? _c(
                     "modal",
                     {
@@ -653,7 +726,7 @@ var render = function() {
                                     on: {
                                       click: function($event) {
                                         $event.preventDefault()
-                                        return _vm.closeModal($event)
+                                        return _vm.closeUpdateModal($event)
                                       }
                                     }
                                   },
@@ -675,6 +748,119 @@ var render = function() {
                                       click: function($event) {
                                         $event.preventDefault()
                                         return _vm.updateTranslation($event)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                " +
+                                        _vm._s(_vm.__("Save")) +
+                                        "\n                            "
+                                    )
+                                  ]
+                                )
+                              ]
+                            )
+                          ])
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.createModalOpened
+                ? _c(
+                    "modal",
+                    {
+                      staticClass: "modal",
+                      attrs: { tabindex: "-1", role: "dialog" }
+                    },
+                    [
+                      _c(
+                        "card",
+                        { staticClass: "w-full" },
+                        [
+                          _c(
+                            "heading",
+                            { staticClass: "pt-8 px-8", attrs: { level: 2 } },
+                            [_vm._v(_vm._s(_vm.__("Add Keywords")))]
+                          ),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "px-8 mt-3" }, [
+                            _c("p", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.__(
+                                    "Add 1 key per line, without the group prefix"
+                                  )
+                                )
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "p-8" }, [
+                            _c("textarea", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.keywords,
+                                  expression: "keywords"
+                                }
+                              ],
+                              staticClass:
+                                "w-full form-input form-input-bordered p-4",
+                              attrs: { rows: "6", cols: "90" },
+                              domProps: { value: _vm.keywords },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.keywords = $event.target.value
+                                }
+                              }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "bg-30 px-6 py-3 flex" }, [
+                            _c(
+                              "div",
+                              { staticClass: "flex items-center ml-auto" },
+                              [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass:
+                                      "btn text-80 font-normal h-9 px-3 mr-3 btn-link",
+                                    attrs: { type: "button" },
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        return _vm.closeCreateModal($event)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                " +
+                                        _vm._s(_vm.__("Cancel")) +
+                                        "\n                            "
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-default btn-primary",
+                                    attrs: { type: "submit" },
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        return _vm.createKeywords($event)
                                       }
                                     }
                                   },
@@ -717,7 +903,7 @@ if (false) {
 }
 
 /***/ }),
-/* 11 */
+/* 6 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
