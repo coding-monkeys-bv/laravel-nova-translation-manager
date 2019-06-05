@@ -1,0 +1,148 @@
+<?php
+
+namespace Voicecode\NovaTranslationManager\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Artisan;
+use Barryvdh\TranslationManager\Manager;
+use Voicecode\NovaTranslationManager\Models\Translation;
+
+class TranslationsController extends Controller
+{    
+    /** 
+     * @var \Barryvdh\TranslationManager\Manager
+     */
+    protected $manager;
+
+    public function __construct(Manager $manager)
+    {
+        $this->manager = $manager;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $groups = Translation::groupBy('group')->orderBy('group')->pluck('group');        
+
+        return response()->json($groups);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store()
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  string $group
+     * @return \Illuminate\Http\Response
+     */
+    public function show($group)
+    {
+        // Get translations by group.
+        $data = Translation::where('group', $group)->orderBy('key', 'asc')->get();
+
+        $translations = [];
+
+        // Group translations by key.
+        foreach($data as $translation){
+            $translations[$translation->key][$translation->locale] = $translation;
+        }
+
+        return response()->json($translations);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  Translation  $translation
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Translation $translation)
+    {
+        // Validate data.
+        $data = $request->validate([
+            'id' => 'required|numeric|min:1',
+            'value' => 'nullable|string',
+        ]);
+        
+        // Update the translation.
+        $translation->update($data);
+        
+        return response()->json([
+            'success' => true,
+        ]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+
+    /**
+     * Export translations to PHP files.
+     */
+    public function export(Request $request)
+    {
+        // Validate data.
+        $data = $request->validate([
+            'group' => 'required|string',
+        ]);
+        
+        // Export translations to PHP files.
+        $this->manager->exportTranslations($data['group']);
+
+        // When JSON files should be generated using the vue-i18n package.
+        if(config('nova-translation-manager.vue-i18n.active')) {
+
+            $job = 'vue-i18n:generate';
+            
+            // When the file should be formatted with the --umd flag.
+            if (config('nova-translation-manager.vue-i18n.umd')) {
+                $job .= ' --umd';
+            }
+
+            Artisan::call($job);
+        }
+    }
+}

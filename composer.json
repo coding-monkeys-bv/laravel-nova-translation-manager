@@ -1,0 +1,30 @@
+{
+    "name": "voicecode-bv/nova-translation-manager",
+    "description": "A Laravel Nova tool.",
+    "keywords": [
+        "laravel",
+        "nova"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=7.1.0",
+        "barryvdh/laravel-translation-manager": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Voicecode\\NovaTranslationManager\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Voicecode\\NovaTranslationManager\\ToolServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
