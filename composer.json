@@ -9,6 +9,12 @@
         "translation manager"
     ],
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Voicecode B.V.",
+            "email": "info@voicecode.nl",
+        }
+    ],
     "require": {
         "php": ">=7.1.0",
         "barryvdh/laravel-translation-manager": "dev-master"
