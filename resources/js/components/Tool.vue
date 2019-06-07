@@ -2,26 +2,49 @@
     <div>
         <heading class="mb-6">Translation Manager</heading>
 
-        <card class="p-6">
-            <div class="flex items-end">
-                <div>
-                    <label class="block mb-4">{{ __('Select a group') }}</label>
-                    <select class="form-control form-input form-input-bordered" size="1" v-model="group" @change="setGroup">
-                        <option :value="item" v-for="(item, index) in groups">{{ item }}</option>
-                    </select>
+        <div class="px-2">
+            <div class="flex -mx-2">
+                <div class="w-1/2 px-2">                
+                    <card class="p-6">
+                        <h3 class="mb-4">{{ __('Select a group') }}</h3>
+                        <div class="flex items-end">
+                            <div class="w-1/3">
+                                <select class="form-control form-input form-input-bordered w-full" size="1" v-model="group" @change="setGroup">
+                                    <option :value="item" v-for="(item, index) in groups">{{ item }}</option>
+                                </select>
+                            </div>
+                            <div class="w-1/3 px-2">
+                                <button class="btn btn-default btn-primary w-full" v-if="groupSelected" @click="exportTranslations">
+                                    {{ __('Publish') }}
+                                </button>
+                            </div>
+                            <div class="w-1/3">
+                                <button class="btn btn-default btn-outline w-full" v-if="groupSelected" @click="openCreateModal">
+                                    {{ __('Add Keyword') }}
+                                </button>
+                            </div>
+                        </div>
+                    </card>
                 </div>
-                <div class="ml-4">
-                    <button class="btn btn-default btn-primary" v-if="groupSelected" @click="exportTranslations">
-                        {{ __('Publish') }}
-                    </button>
-                </div>
-                <div class="ml-4">
-                    <button class="btn btn-default btn-primary" v-if="groupSelected" @click="openCreateModal">
-                        {{ __('Add Keyword') }}
-                    </button>
+
+                <div class="w-1/2 px-2">
+                    <card class="p-6">
+                        <h3 class="mb-4">{{ __('Create a group') }}</h3>
+                        <div class="flex items-end">
+                            <div class="w-1/3">
+                                <input class="form-control form-input form-input-bordered w-full" v-model="newGroup">
+                            </div>
+                            <div class="w-1/3 px-2">
+                                <button class="btn btn-default btn-primary w-full" @click="createGroup">
+                                    {{ __('Create Group') }}
+                                </button>
+                            </div>
+                            <div class="w-1/3"></div>
+                        </div>
+                    </card>
                 </div>
             </div>
-        </card>
+        </div>
 
         <card v-if="groupSelected" class="mt-6">
             <table class="table w-full">
@@ -125,6 +148,7 @@ export default {
         return {
             group: null,
             groups: [],
+            newGroup: null,
             selectedGroup: null,
             keywords: null,
             locales: [],
@@ -161,6 +185,33 @@ export default {
             })
         },
 
+        createGroup() {
+            if(this.newGroup !== null && this.newGroup !== '') {
+            
+                var data = {}
+                data.group = this.newGroup
+
+                axios.post(this.apiUrl + 'groups', data).then(response => {
+
+                    // Set formatted group name.
+                    this.group = response.data.group
+
+                    // Get new groups list.
+                    this.getGroups();
+
+                    // Switch to the new group.
+                    this.setGroup(this.group);
+
+                    // Reset new group value.
+                    this.newGroup = null;
+                }).catch(error => {
+
+                    // Show message.
+                    this.$toasted.show(error.response.data.errors.group[0], { type: 'error' })
+                })
+            }
+        },
+
         createKeywords() {
             // Setup data.
             var data = {}
@@ -176,7 +227,7 @@ export default {
                 this.setGroup(this.group);
 
                 // Show message.
-                this.$toasted.show('The translation has been updated!', { type: 'success' })
+                this.$toasted.show('The translation has been created!', { type: 'success' })
             })
         },
 
@@ -196,7 +247,7 @@ export default {
 
                 // Show message.
                 this.$toasted.show('The translation has been updated!', { type: 'success' })
-            })
+            });
         },
 
         exportTranslations() {
