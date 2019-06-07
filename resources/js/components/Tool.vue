@@ -172,6 +172,9 @@ export default {
                 // Close the modal.
                 this.closeCreateModal();
 
+                // Make sure the data is being refreshed.
+                this.setGroup(this.group);
+
                 // Show message.
                 this.$toasted.show('The translation has been updated!', { type: 'success' })
             })
