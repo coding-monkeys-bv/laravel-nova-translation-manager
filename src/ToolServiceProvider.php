@@ -75,5 +75,12 @@ class ToolServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfiguration();
+
+        // Register commands.
+        $this->app->singleton('command.translation-manager.install', function ($app) {
+            return new Console\InstallCommand($app['translation-manager']);
+        });
+
+        $this->commands('command.translation-manager.install');
     }
 }

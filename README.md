@@ -39,6 +39,12 @@ public function tools()
 }
 ```
 
+When starting off with an empty database, it's mandatory to create a first database record. You can do this by running the install command. This will generate a record based on your current app locale. 
+
+```
+php artisan translation-manager:install
+```
+
 ## Note for Vue i18n Generator users
 
 The package ships with a config file where you can set the value of output messages. Make sure this is set to false, otherwise Laravel Nova will throw some errors while publishing translation files. (Thanks [Martin Lindhe] for merging this PR :-))
