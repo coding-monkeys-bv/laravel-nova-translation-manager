@@ -45,7 +45,7 @@ class GroupsController extends Controller
         $group = Str::slug($data['group']);
 
         // Get supported locales.
-        $locales = Translation::groupBy('locale')->pluck('locale')->toArray();
+        $locales = config('nova-translation-manager.locales');
 
         // Add a placeholder keyword for all locales.
         foreach ($locales as $locale) {
@@ -105,7 +105,7 @@ class GroupsController extends Controller
     public function destroy($group)
     {
         // Get supported locales.
-        $locales = Translation::groupBy('locale')->pluck('locale')->toArray();
+        $locales = config('nova-translation-manager.locales');
 
         // Delete all PHP translation files.
         foreach ($locales as $locale) {

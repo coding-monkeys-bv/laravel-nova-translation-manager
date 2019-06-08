@@ -13,9 +13,7 @@ class LocalesController extends Controller
     public function locales()
     {
         // Merge app locale and translation locales.
-        $locales = Translation::groupBy('locale')->pluck('locale')->toArray();
-
-        sort($locales);
+        $locales = config('nova-translation-manager.locales');
 
         return response()->json($locales);
     }

@@ -59,7 +59,7 @@ class TranslationsController extends Controller
         $keys = explode("\n", request('keywords'));
 
         // Get supported locales.
-        $locales = Translation::groupBy('locale')->pluck('locale')->toArray();
+        $locales = config('nova-translation-manager.locales');
 
         foreach ($keys as $key) {
 
