@@ -21,6 +21,24 @@ php artisan vendor:publish --provider="Barryvdh\TranslationManager\ManagerServic
 php artisan migrate
 ```
 
+Now in NovaServiceProvider, make sure you register this tool in the tools method.
+
+```
+use Voicecode\NovaTranslationManager\NovaTranslationManager;
+
+/**
+ * Get the tools that should be listed in the Nova sidebar.
+ *
+ * @return array
+ */
+public function tools()
+{
+    return [
+        new NovaTranslationManager(),
+    ];
+}
+```
+
 ## Note for Vue i18n Generator users
 
 The package ships with a config file where you can set the value of output messages. Make sure this is set to false, otherwise Laravel Nova will throw some errors while publishing translation files. (Thanks [Martin Lindhe] for merging this PR :-))
