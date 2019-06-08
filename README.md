@@ -45,6 +45,10 @@ When starting off with an empty database, it's mandatory to create a first datab
 php artisan translation-manager:install
 ```
 
+## Translating this package
+
+You can easily translate all texts of this package in the Laravel Nova JSON translation file. I'd be happy to add translations for your language. An example can be found in the translations folder.
+
 ## Note for Vue i18n Generator users
 
 The package ships with a config file where you can set the value of output messages. Make sure this is set to false, otherwise Laravel Nova will throw some errors while publishing translation files. (Thanks [Martin Lindhe] for merging this PR :-))
