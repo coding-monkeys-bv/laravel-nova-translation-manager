@@ -5,7 +5,7 @@
         <div class="flex -mx-2">
             <div class="w-1/2 px-2">                
                 <card class="p-6">
-                    <h3 class="mb-4">{{ __('Select a group') }}</h3>
+                    <h3 class="mb-4">{{ __('Select A Group') }}</h3>
                     <div class="flex items-end">
                         <div class="w-1/3">
                             <select class="form-control form-input form-input-bordered w-full" size="1" v-model="group" @change="setGroup">
@@ -18,7 +18,7 @@
 
             <div class="w-1/2 px-2">
                 <card class="p-6">
-                    <h3 class="mb-4">{{ __('Create a group') }}</h3>
+                    <h3 class="mb-4">{{ __('Create A Group') }}</h3>
                     <div class="flex items-end">
                         <div class="w-1/3">
                             <input class="form-control form-input form-input-bordered w-full" v-model="newGroup">
