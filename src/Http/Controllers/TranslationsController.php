@@ -140,26 +140,17 @@ class TranslationsController extends Controller
     }
 
     /**
-     * Update keyword.
-     */
-    public function updateKeyword(Request $request)
-    {
-        // Validate data.
-        $data = $request->validate([
-            'group' => 'required|string',
-            'keyword' => 'required|string',
-        ]);
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param string $group
+     * @param string $keyword
+     *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($group, $key)
     {
-        //
+        // Delete translations
+        Translation::where('group', $group)->where('key', $key)->delete();
     }
 
     /**

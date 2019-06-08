@@ -12,16 +12,6 @@
                                 <option :value="item" v-for="(item, index) in groups">{{ item }}</option>
                             </select>
                         </div>
-                        <div class="w-1/3 px-2">
-                            <button class="btn btn-default btn-primary w-full" v-if="groupSelected" @click="exportTranslations">
-                                {{ __('Publish') }}
-                            </button>
-                        </div>
-                        <div class="w-1/3">
-                            <button class="btn btn-default btn-danger w-full" v-if="groupSelected" @click="openDeleteGroupModal">
-                                {{ __('Delete Group') }}
-                            </button>
-                        </div>
                     </div>
                 </card>
             </div>
@@ -45,8 +35,16 @@
         </div>
 
         <div v-if="groupSelected" class="mt-6">
-            <button class="btn btn-default btn-primary" v-if="groupSelected" @click="openCreateModal">
+            <button class="btn btn-default btn-primary mr-3" v-if="groupSelected" @click="openCreateModal">
                 {{ __('Add Keyword') }}
+            </button>
+            
+            <button class="btn btn-default btn-primary mr-3" v-if="groupSelected" @click="exportTranslations">
+                {{ __('Publish') }}
+            </button>
+            
+            <button class="btn btn-default btn-danger" v-if="groupSelected" @click="openDeleteGroupModal">
+                {{ __('Delete Group') }}
             </button>
         </div>
 
@@ -55,6 +53,7 @@
                 <thead>
                     <th class="text-left">Keyword</th>
                     <th class="text-left" v-for="(locale, index) in locales">{{ locale }}</th>
+                    <th class="text-right"></th>
                 </thead>
                 <tbody>
                     <tr v-for="translation in translations">
@@ -67,6 +66,11 @@
                             <span v-else>
                                 <em class="text-danger">{{ __('Not Available') }}</em>
                             </span>
+                        </td>
+                        <td class="text-right">      
+                            <button class="btn btn-default btn-icon btn-white float-right" @click="openDeleteModal(translation[locales[0]].key)">
+                                <icon type="delete" class="text-80" />
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -135,6 +139,29 @@
                     </card>
                 </modal>
 
+                <modal v-if="deleteModalOpened" class="modal" tabindex="-1" role="dialog">
+                    <card class="w-full">
+
+                        <heading :level="2" class="pt-8 px-8">{{ __('Delete This Translation') }}</heading>
+
+                        <div class="px-8 mt-3 mb-3">
+                            <p>{{ __('Are you sure you want to delete this translation?') }}</p>
+                        </div>
+
+                        <div class="bg-30 px-6 py-3 flex">
+                            <div class="flex items-center ml-auto">
+                                <button type="button" @click.prevent="closeDeleteModal" class="btn text-80 font-normal h-9 px-3 mr-3 btn-link">
+                                    {{ __('Cancel') }}
+                                </button>
+
+                                <button type="submit" @click.prevent="deleteKeyword" class="btn btn-default btn-danger">
+                                    {{ __('Delete') }}
+                                </button>
+                            </div>
+                        </div>
+                    </card>
+                </modal> 
+
                 <modal v-if="deleteGroupModalOpened" class="modal" tabindex="-1" role="dialog">
                     <card class="w-full">
 
@@ -180,11 +207,13 @@ export default {
             newGroup: null,
             selectedGroup: null,
             keywords: null,
+            selectedKeyword: null,
             locales: [],
             selected: {},
             translations: [],
             createModalOpened: false,
             updateModalOpened: false,
+            deleteModalOpened: false,
             deleteGroupModalOpened: false,
             apiUrl: '/voicecode/nova-translation-manager/',
         }
@@ -283,11 +312,31 @@ export default {
             })
         },
 
+        deleteKeyword() {
+
+            if(
+                this.selectedGroup !== null && this.selectedGroup !== '' && 
+                this.selectedKeyword !== null && this.selectedKeyword !== '') {
+                    
+                    axios.delete(this.apiUrl + 'translations/' + this.selectedGroup + '/' + this.selectedKeyword).then(response => {
+                        
+                        // Make sure the data is being refreshed.
+                        this.setGroup(this.group); 
+
+                        // Close the modal.
+                        this.closeDeleteModal();
+
+                        // Show message.
+                        this.$toasted.show('The translation has been updated!', { type: 'success' })
+                    });
+            }
+        },
+
         updateTranslation() {
             // Setup data.
             var data = {}
             data.id = this.selected.id
-            data.value = this.selected.value;
+            data.value = this.selected.value
 
             axios.put(this.apiUrl + 'translations/' + this.selected.id, data).then(response => {
 
@@ -338,6 +387,18 @@ export default {
 
         closeDeleteGroupModal() {
             this.deleteGroupModalOpened = false;
+        },
+
+        openDeleteModal(keyword) {
+            this.selectedGroup = this.group;
+            this.selectedKeyword = keyword;
+            this.deleteModalOpened = true;
+        },
+
+        closeDeleteModal() {
+            this.selectedGroup = null;
+            this.selectedKeyword = null;
+            this.deleteModalOpened = false;
         }
     }
 }
