@@ -99,11 +99,28 @@ class GroupsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param string $group
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($group)
     {
-        //
+        // Get supported locales.
+        $locales = Translation::groupBy('locale')->pluck('locale')->toArray();
+
+        // Delete all PHP translation files.
+        foreach ($locales as $locale) {
+            $file = resource_path('lang/'.$locale.'/').$group.'.php';
+
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        }
+
+        // Delete translations from database.
+        Translation::where('group', $group)->delete();
+
+        return response()->json([
+            'success' => true,
+        ]);
     }
 }

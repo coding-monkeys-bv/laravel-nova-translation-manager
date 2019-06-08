@@ -130,12 +130,24 @@ class TranslationsController extends Controller
 
         // If an empty string is given, make sure it's null.
         $data['value'] = ($data['value'] == '') ? null : $data['value'];
-        
+
         // Update the translation.
         $translation->update($data);
-        
+
         return response()->json([
             'success' => true,
+        ]);
+    }
+
+    /**
+     * Update keyword.
+     */
+    public function updateKeyword(Request $request)
+    {
+        // Validate data.
+        $data = $request->validate([
+            'group' => 'required|string',
+            'keyword' => 'required|string',
         ]);
     }
 
@@ -159,14 +171,14 @@ class TranslationsController extends Controller
         $data = $request->validate([
             'group' => 'required|string',
         ]);
-        
+
         // Export translations to PHP files.
         $this->manager->exportTranslations($data['group']);
 
         // When JSON files should be generated using the vue-i18n package.
         if (config('nova-translation-manager.vue-i18n.active')) {
             $job = 'vue-i18n:generate';
-            
+
             // When the file should be formatted with the --umd flag.
             if (config('nova-translation-manager.vue-i18n.umd')) {
                 $job .= ' --umd';
