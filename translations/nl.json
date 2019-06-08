@@ -10,5 +10,6 @@
     "Add 1 key per line, without the group prefix": "Voeg 1 sleutelwoord per regel toe, zonder de naam van de groep als prefix",
     "Save": "Opslaan",
     "Delete This Group": "Verwijder Deze Groep",
-    "Are you sure you want to delete this group? The generated translations files will also be deleted.": "Weet je zeker dat je deze groep wilt verwijderen? De gegenereerde bestanden zullen ook worden verwijderd.",
+    "Delete This Translation": "Verwijder Deze Vertaling",
+    "Are you sure?": "Weet je het zeker?"
 }

@@ -140,6 +140,34 @@ class TranslationsController extends Controller
     }
 
     /**
+     * Update the specified keyword in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param
+     * @return \Illuminate\Http\Response
+     */
+    public function updateKey(Request $request)
+    {
+        // Validate data.
+        $data = $request->validate([
+            'group' => 'required|string',
+            'old_key' => 'nullable|string',
+            'new_key' => 'nullable|string',
+        ]);
+
+        // Update keys
+        Translation::where('group', $data['group'])
+            ->where('key', $data['old_key'])
+            ->update([
+                'key' => $data['new_key'],
+            ]);
+
+        return response()->json([
+            'success' => true,
+        ]);
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param string $group

@@ -39,6 +39,6 @@ class InstallCommand extends Command
             ]);
         }
 
-        $this->info('First record has been created.');
+        $this->info('First records have been created.');
     }
 }

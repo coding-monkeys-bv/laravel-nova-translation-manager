@@ -57,7 +57,11 @@
                 </thead>
                 <tbody>
                     <tr v-for="translation in translations">
-                        <td>{{ translation[locales[0]].key }}</td>
+                        <td>
+                            <span class="cursor-pointer" @click="openUpdateKeywordModal(translation[locales[0]].key)">
+                                {{ translation[locales[0]].key }}
+                            </span>
+                        </td>
                         <td v-for="(locale, index) in locales" @click="openUpdateModal(translation[locale])">
                             <span class="cursor-pointer" v-if="translation[locale] && translation[locale].value !== null">
                                 <span v-if="translation[locale].value.length > 80">{{ translation[locale].value.substring(0, 80) }}...</span>
@@ -80,6 +84,30 @@
 
         <portal to="modals">
             <transition name="fade">
+
+                <modal v-if="updateKeywordModalOpened" class="modal" tabindex="-1" role="dialog">
+                    <card class="w-full">
+                        
+                        <heading :level="2" class="pt-8 px-8">{{ __('Update Keyword') }}</heading>
+
+                        <div class="p-8"> {{ selectedKeyword }} - {{ updatedKeyword }}
+                            <input class="w-full form-input form-input-bordered p-4" v-model="updatedKeyword">
+                        </div>
+
+                        <div class="bg-30 px-6 py-3 flex">
+                            <div class="flex items-center ml-auto">
+                                <button type="button" @click.prevent="closeUpdateKeywordModal" class="btn text-80 font-normal h-9 px-3 mr-3 btn-link">
+                                    {{ __('Cancel') }}
+                                </button>
+
+                                <button type="submit" @click.prevent="updateKeyword" class="btn btn-default btn-primary">
+                                    {{ __('Save') }}
+                                </button>
+                            </div>
+                        </div>
+                    </card>
+                </modal>
+
 
                 <modal v-if="updateModalOpened" class="modal" tabindex="-1" role="dialog">
                     <card class="w-full">
@@ -145,7 +173,7 @@
                         <heading :level="2" class="pt-8 px-8">{{ __('Delete This Translation') }}</heading>
 
                         <div class="px-8 mt-3 mb-3">
-                            <p>{{ __('Are you sure you want to delete this translation?') }}</p>
+                            <p>{{ __('Are you sure?') }}</p>
                         </div>
 
                         <div class="bg-30 px-6 py-3 flex">
@@ -168,7 +196,7 @@
                         <heading :level="2" class="pt-8 px-8">{{ __('Delete This Group') }}</heading>
 
                         <div class="px-8 mt-3 mb-3">
-                            <p>{{ __('Are you sure you want to delete this group? The generated translation files will also be deleted.') }}</p>
+                            <p>{{ __('Are you sure?') }}</p>
                         </div>
 
                         <div class="bg-30 px-6 py-3 flex">
@@ -207,6 +235,7 @@ export default {
             newGroup: null,
             selectedGroup: null,
             keywords: null,
+            updatedKeyword: null,
             selectedKeyword: null,
             locales: [],
             selected: {},
@@ -215,6 +244,7 @@ export default {
             updateModalOpened: false,
             deleteModalOpened: false,
             deleteGroupModalOpened: false,
+            updateKeywordModalOpened: false,
             apiUrl: '/voicecode/nova-translation-manager/',
         }
     },
@@ -312,6 +342,32 @@ export default {
             })
         },
 
+        updateKeyword() {
+            if(
+                this.selectedGroup !== null && this.selectedGroup !== '' && 
+                this.selectedKeyword !== null && this.selectedKeyword !== '' &&
+                this.updatedKeyword !== null && this.updatedKeyword !== '') {
+
+                    // Setup data.
+                    var data = {}
+                    data.group = this.selectedGroup
+                    data.new_key = this.updatedKeyword
+                    data.old_key = this.selectedKeyword
+
+                    axios.put(this.apiUrl + 'translations/key', data).then(response => {
+                        
+                        // Make sure the data is being refreshed.
+                        this.setGroup(this.group); 
+
+                        // Close the modal.
+                        this.closeUpdateKeywordModal();
+
+                        // Show message.
+                        this.$toasted.show('The keyword has been updated!', { type: 'success' })
+                    });
+            }
+        },
+
         deleteKeyword() {
 
             if(
@@ -399,6 +455,19 @@ export default {
             this.selectedGroup = null;
             this.selectedKeyword = null;
             this.deleteModalOpened = false;
+        },
+
+        openUpdateKeywordModal(keyword) {
+            this.selectedGroup = this.group;
+            this.updatedKeyword = keyword;
+            this.selectedKeyword = keyword;
+            this.updateKeywordModalOpened = true;
+        },
+
+        closeUpdateKeywordModal() {
+            this.selectedKeyword = null;
+            this.updatedKeyword = null;
+            this.updateKeywordModalOpened = false;
         }
     }
 }
