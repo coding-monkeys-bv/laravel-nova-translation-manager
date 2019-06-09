@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": ">=7.1.0",
-        "barryvdh/laravel-translation-manager": "dev-master"
+        "barryvdh/laravel-translation-manager": "^0.5.3"
     },
     "autoload": {
         "psr-4": {
