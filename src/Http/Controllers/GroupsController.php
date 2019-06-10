@@ -45,7 +45,7 @@ class GroupsController extends Controller
         $group = TranslationHelper::slug($data['group']);
 
         // Get supported locales.
-        $locales = config('nova-translation-manager.locales');
+        $locales = TranslationHelper::getLocales();
 
         // Add a placeholder keyword for all locales.
         foreach ($locales as $locale) {
@@ -105,7 +105,7 @@ class GroupsController extends Controller
     public function destroy($group)
     {
         // Get supported locales.
-        $locales = config('nova-translation-manager.locales');
+        $locales = TranslationHelper::getLocales();
 
         // Delete all PHP translation files.
         foreach ($locales as $locale) {

@@ -26,19 +26,14 @@ class InstallCommand extends Command
      */
     public function handle()
     {
-        // Get supported locales.
-        $locales = config('nova-translation-manager.locales');
+        Translation::create([
+            'status' => 0,
+            'locale' => app()->getLocale(),
+            'group' => 'test',
+            'key' => 'placeholder',
+            'value' => 'Some dummy value here',
+        ]);
 
-        foreach ($locales as $locale) {
-            Translation::create([
-                'status' => 0,
-                'locale' => $locale,
-                'group' => 'test',
-                'key' => 'placeholder',
-                'value' => 'Some dummy value here',
-            ]);
-        }
-
-        $this->info('First records have been created.');
+        $this->info('First record has been created.');
     }
 }

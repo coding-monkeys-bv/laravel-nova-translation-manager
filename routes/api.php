@@ -9,6 +9,7 @@ Route::namespace('Voicecode\NovaTranslationManager\Http\Controllers')->group(fun
 
     // Locales Routes.
     Route::get('locales', 'LocalesController@locales');
+    Route::delete('locales/{locale}', 'LocalesController@destroy')->where(['locale' => '[a-zA-Z0-9-]+']);
 
     // Translations Routes.
     Route::post('translations/fix/group', 'TranslationsController@fixGroup');

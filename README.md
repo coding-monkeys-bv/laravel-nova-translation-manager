@@ -41,8 +41,6 @@ public function tools()
 
 ## Supported locales
 
-Please use the config file to specify which locales you want to support.
-
 When starting off with an empty database, it's mandatory to create a first database record. You can do this by running the install command. This will generate a record based on your current app locale. 
 
 ```

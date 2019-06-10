@@ -12,10 +12,13 @@
     "Delete This Group": "Verwijder Deze Groep",
     "Delete This Translation": "Verwijder Deze Vertaling",
     "Are you sure?": "Weet je het zeker?",
-    "Replace Existing Translations": "Vervang Bestaande Vertalingen",
-    "Append New Translations": "Nieuwe Vertalingen Toevoegen",
+    "Replace": "Vervangen",
+    "Append": "Toevoegen",
     "Import": "Importeren",
     "Fix Translation": "Herstel Vertaling",
     "Fix Translations": "Herstel Vertalingen",
-    "This translation needs fixing": "Deze vertaling moet hersteld worden"
+    "This translation needs fixing": "Deze vertaling moet hersteld worden",
+    "Locales": "Talen",
+    "Delete Locale": "Taal Verwijderen",
+    "Delete This Locale": "Verwijder Deze Taal"
 }

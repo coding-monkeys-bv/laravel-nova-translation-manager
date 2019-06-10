@@ -3,6 +3,7 @@
 namespace Voicecode\NovaTranslationManager\Helpers;
 
 use Illuminate\Support\Str;
+use Voicecode\NovaTranslationManager\Models\Translation;
 
 class TranslationHelper
 {
@@ -32,5 +33,40 @@ class TranslationHelper
         $title = preg_replace('!['.preg_quote($separator).'\s]+!u', $separator, $title);
 
         return trim($title, $separator);
+    }
+
+    /**
+     * Get available locales.
+     */
+    public static function getLocales()
+    {
+        $locales = Translation::groupBy('locale')
+            ->select('locale')
+            ->pluck('locale');
+
+        return $locales;
+    }
+
+    /**
+     * Remove folders recursively.
+     *
+     * @param string $dir
+     *
+     * @return void
+     */
+    public static function removeDirectory($dir)
+    {
+        foreach (scandir($dir) as $file) {
+            if ('.' === $file || '..' === $file) {
+                continue;
+            }
+
+            if (is_dir($dir.'/'.$file)) {
+                rmdir_recursive($dir.'/'.$file);
+            } else {
+                unlink($dir.'/'.$file);
+            }
+        }
+        rmdir($dir);
     }
 }

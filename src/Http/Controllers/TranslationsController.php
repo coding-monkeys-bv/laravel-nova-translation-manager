@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Artisan;
 use Barryvdh\TranslationManager\Manager;
 use Voicecode\NovaTranslationManager\Models\Translation;
+use Voicecode\NovaTranslationManager\Helpers\TranslationHelper;
 
 class TranslationsController extends Controller
 {
@@ -59,7 +60,7 @@ class TranslationsController extends Controller
         $keys = explode("\n", request('keywords'));
 
         // Get supported locales.
-        $locales = config('nova-translation-manager.locales');
+        $locales = TranslationHelper::getLocales();
 
         foreach ($keys as $key) {
 
@@ -235,7 +236,7 @@ class TranslationsController extends Controller
         ]);
 
         // Get supported locales.
-        $locales = config('nova-translation-manager.locales');
+        $locales = TranslationHelper::getLocales();
 
         foreach ($locales as $locale) {
             Translation::firstOrCreate([
@@ -257,7 +258,7 @@ class TranslationsController extends Controller
         ]);
 
         // Get supported locales.
-        $locales = config('nova-translation-manager.locales');
+        $locales = TranslationHelper::getLocales();
 
         // Get existing translations.
         $keys = Translation::select('group', 'key')

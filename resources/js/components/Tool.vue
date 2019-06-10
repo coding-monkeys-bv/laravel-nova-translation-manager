@@ -9,8 +9,8 @@
                     <div class="flex items-end">
                         <div class="w-1/3">
                             <select class="form-control form-input form-input-bordered w-full" size="1" v-model="importType">
-                                <option value="replace">{{ __('Replace Existing Translations') }}</option>
-                                <option value="append">{{ __('Append New Translations') }}</option>
+                                <option value="replace">{{ __('Replace') }}</option>
+                                <option value="append">{{ __('Append') }}</option>
                             </select>
                         </div>
                         <div class="w-1/3 px-2">
@@ -48,6 +48,36 @@
                             </button>
                         </div>
                         <div class="w-1/3"></div>
+                    </div>
+                </card>
+            </div>
+
+            <div class="w-1/2 px-2 mt-6">
+                <card class="p-6">
+                    <h3 class="mb-4">{{ __('Locales') }}</h3>
+                    <!-- <div class="flex items-end">
+                        <div class="w-1/3">
+                            <input class="form-control form-input form-input-bordered w-full" v-model="newGroup">
+                        </div>
+                        <div class="w-1/3 px-2">
+                            <button class="btn btn-default btn-primary w-full" @click="createGroup">
+                                {{ __('Create Locale') }}
+                            </button>
+                        </div>
+                        <div class="w-1/3"></div>
+                    </div> -->
+
+                    <div class="flex">
+                        <div class="w-1/3">
+                            <select class="form-control form-input form-input-bordered w-full" size="1" v-model="selectedLocale">
+                                <option :value="locale" v-for="(locale, index) in locales">{{ locale }}</option>
+                            </select>
+                        </div>
+                        <div class="w-1/3 px-2">
+                            <button class="btn btn-default btn-danger" @click="openDeleteLocaleModal">
+                                {{ __('Delete Locale') }}
+                            </button>
+                        </div>
                     </div>
                 </card>
             </div>
@@ -247,6 +277,29 @@
                             </div>
                         </div>
                     </card>
+                </modal>   
+
+                <modal v-if="deleteLocaleModalOpened" class="modal" tabindex="-1" role="dialog">
+                    <card class="w-full">
+
+                        <heading :level="2" class="pt-8 px-8">{{ __('Delete This Locale') }}</heading>
+
+                        <div class="px-8 mt-3 mb-3">
+                            <p>{{ __('Are you sure?') }}</p>
+                        </div>
+
+                        <div class="bg-30 px-6 py-3 flex">
+                            <div class="flex items-center ml-auto">
+                                <button type="button" @click.prevent="closeDeleteLocaleModal" class="btn text-80 font-normal h-9 px-3 mr-3 btn-link">
+                                    {{ __('Cancel') }}
+                                </button>
+
+                                <button type="submit" @click.prevent="deleteLocale" class="btn btn-default btn-danger">
+                                    {{ __('Delete') }}
+                                </button>
+                            </div>
+                        </div>
+                    </card>
                 </modal>               
                 
             </transition>
@@ -276,12 +329,14 @@ export default {
             selectedKeyword: null,
             locales: [],
             defaultLocale: null,
+            selectedLocale: null,
             selected: {},
             translations: [],
             createModalOpened: false,
             updateModalOpened: false,
             deleteModalOpened: false,
             deleteGroupModalOpened: false,
+            deleteLocaleModalOpened: false,
             updateKeywordModalOpened: false,
             apiUrl: '/voicecode/nova-translation-manager/',
         }
@@ -509,6 +564,27 @@ export default {
             });
         },
 
+        deleteLocale() {
+
+            if(this.selectedLocale !== null && this.selectedLocale !== '') {
+
+                axios.delete(this.apiUrl + 'locales/' + this.selectedLocale).then(response => {
+                    
+                    // Close the modal.
+                    this.closeDeleteLocaleModal();
+
+                    // Make sure the data is being refreshed.
+                    this.setGroup(this.group);
+
+                    // Reload locales
+                    this.getLocales();
+
+                    // Show message.
+                    this.$toasted.show('The locale has been deleted!', { type: 'success' })
+                });
+            }
+        },
+
         openCreateModal() {
             this.createModalOpened = true;
         },
@@ -559,6 +635,14 @@ export default {
             this.selectedKeyword = null;
             this.updatedKeyword = null;
             this.updateKeywordModalOpened = false;
+        }, 
+
+        openDeleteLocaleModal() {
+            this.deleteLocaleModalOpened = true;
+        }, 
+
+        closeDeleteLocaleModal() {
+            this.deleteLocaleModalOpened = false;
         }
     }
 }
