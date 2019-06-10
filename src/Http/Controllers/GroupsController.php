@@ -2,10 +2,10 @@
 
 namespace Voicecode\NovaTranslationManager\Http\Controllers;
 
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Voicecode\NovaTranslationManager\Models\Translation;
+use Voicecode\NovaTranslationManager\Helpers\TranslationHelper;
 
 class GroupsController extends Controller
 {
@@ -42,7 +42,7 @@ class GroupsController extends Controller
         ]);
 
         // Convert group name into slug format.
-        $group = Str::slug($data['group']);
+        $group = TranslationHelper::slug($data['group']);
 
         // Get supported locales.
         $locales = config('nova-translation-manager.locales');
