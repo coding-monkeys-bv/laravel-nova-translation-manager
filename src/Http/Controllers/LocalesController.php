@@ -14,7 +14,11 @@ class LocalesController extends Controller
     {
         // Merge app locale and translation locales.
         $locales = config('nova-translation-manager.locales');
+        $defaultLocale = app()->getLocale();
 
-        return response()->json($locales);
+        return response()->json([
+            'locales' => $locales,
+            'defaultLocale' => $defaultLocale,
+        ]);
     }
 }
