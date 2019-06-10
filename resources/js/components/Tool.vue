@@ -2,12 +2,31 @@
     <div>
         <heading class="mb-6">Translation Manager</heading>
 
-        <div class="flex -mx-2">
+        <div class="flex flex-wrap -mx-2">
+            <div class="w-1/2 px-2">
+                <card class="p-6">
+                    <h3 class="mb-4">{{ __('Import Translations') }}</h3>
+                    <div class="flex items-end">
+                        <div class="w-1/3">
+                            <select class="form-control form-input form-input-bordered w-full" size="1" v-model="importType">
+                                <option value="replace">{{ __('Replace Existing Translations') }}</option>
+                                <option value="append">{{ __('Append New Translations') }}</option>
+                            </select>
+                        </div>
+                        <div class="w-1/3 px-2">
+                            <button class="btn btn-default btn-primary w-full" @click="importTranslations">
+                                {{ __('Import') }}
+                            </button>
+                        </div>
+                    </div>
+                </card>
+            </div>
+
             <div class="w-1/2 px-2">                
                 <card class="p-6">
                     <h3 class="mb-4">{{ __('Select A Group') }}</h3>
                     <div class="flex items-end">
-                        <div class="w-1/3">
+                        <div class="w-1/2">
                             <select class="form-control form-input form-input-bordered w-full" size="1" v-model="group" @change="setGroup">
                                 <option :value="item" v-for="(item, index) in groups">{{ item }}</option>
                             </select>
@@ -16,7 +35,7 @@
                 </card>
             </div>
 
-            <div class="w-1/2 px-2">
+            <div class="w-1/2 px-2 mt-6">
                 <card class="p-6">
                     <h3 class="mb-4">{{ __('Create A Group') }}</h3>
                     <div class="flex items-end">
@@ -42,6 +61,10 @@
             <button class="btn btn-default btn-primary mr-3" v-if="groupSelected" @click="exportTranslations">
                 {{ __('Publish') }}
             </button>
+
+            <button class="btn btn-default btn-primary mr-3" v-if="groupSelected" @click="fixMissingTranslations">
+                {{ __('Fix Translations') }}
+            </button>
             
             <button class="btn btn-default btn-danger" v-if="groupSelected" @click="openDeleteGroupModal">
                 {{ __('Delete Group') }}
@@ -56,10 +79,10 @@
                     <th class="text-right"></th>
                 </thead>
                 <tbody>
-                    <tr v-for="translation in translations">
+                    <tr v-for="translation in translations" v-if="translation[defaultLocale]">
                         <td>
-                            <span class="cursor-pointer" @click="openUpdateKeywordModal(translation[locales[0]].key)">
-                                {{ translation[locales[0]].key }}
+                            <span class="cursor-pointer" @click="openUpdateKeywordModal(translation[defaultLocale].key)">
+                                {{ translation[defaultLocale].key }}
                             </span>
                         </td>
                         <td v-for="(locale, index) in locales" @click="openUpdateModal(translation[locale])">
@@ -72,13 +95,26 @@
                             </span>
                         </td>
                         <td class="text-right">      
-                            <button class="btn btn-default btn-icon btn-white float-right" @click="openDeleteModal(translation[locales[0]].key)">
+                            <button class="btn btn-default btn-icon btn-white float-right" @click="openDeleteModal(translation[defaultLocale].key)">
                                 <icon type="delete" class="text-80" />
                             </button>
                         </td>
                     </tr>
+                    <tr v-else>
+                        <td>
+                            <span class="text-danger">{{ __('This translation needs fixing') }}</span>
+                        </td>
+                        <td v-for="(locale, index) in locales"></th>
+                        <td class="text-right">      
+                            <button class="btn btn-default btn-icon btn-white float-right" @click="fixMissingTranslation(translation)">
+                                {{ __('Fix Translation') }}
+                            </button>
+                        </td>
+                    </tr>                     
                 </tbody>
             </table>
+
+            
         </card>
 
 
@@ -234,10 +270,12 @@ export default {
             groups: [],
             newGroup: null,
             selectedGroup: null,
+            importType: null,
             keywords: null,
             updatedKeyword: null,
             selectedKeyword: null,
             locales: [],
+            defaultLocale: null,
             selected: {},
             translations: [],
             createModalOpened: false,
@@ -264,7 +302,8 @@ export default {
 
         getLocales() {
             axios.get(this.apiUrl + 'locales').then(response => { 
-                this.locales = response.data;
+                this.locales = response.data.locales;
+                this.defaultLocale = response.data.defaultLocale;
             })
         },
 
@@ -415,6 +454,58 @@ export default {
             axios.post(this.apiUrl + 'translations/export', data).then(response => {
                 // Show message.
                 this.$toasted.show('The translations have been exported!', { type: 'success' })
+            });
+        },
+
+        importTranslations() {
+            
+            if(this.importType !== null && this.importType !== '') {
+                // Setup data.
+                var data = {}
+                data.type = this.importType 
+
+                axios.post(this.apiUrl + 'translations/import', data).then(response => {
+                    // Show message.
+                    this.$toasted.show('The translations have been imported!', { type: 'success' })
+                });
+            }
+        },
+
+        // Fix a single missing translation.
+        fixMissingTranslation(translation) {
+
+            // Get the first key of the translation object.
+            var trans = translation[Object.keys(translation)[0]];
+
+            // Setup data.
+            var data = {}
+            data.key = trans.key
+            data.group = trans.group
+
+            axios.post(this.apiUrl + 'translations/fix', data).then(response => {
+
+                // Make sure the data is being refreshed.
+                this.setGroup(this.group);
+
+                // Show message.
+                this.$toasted.show('The translation has been fixed!', { type: 'success' })
+            });
+        },
+
+        // Fix all missing translations from within a group.
+        fixMissingTranslations() {
+
+            // Setup data.
+            var data = {}
+            data.group = this.group
+
+            axios.post(this.apiUrl + 'translations/fix/group', data).then(response => {
+
+                // Make sure the data is being refreshed.
+                this.setGroup(this.group);
+
+                // Show message.
+                this.$toasted.show('All translations within this group have been fixed!', { type: 'success' })
             });
         },
 

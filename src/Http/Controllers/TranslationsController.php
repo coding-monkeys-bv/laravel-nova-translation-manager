@@ -206,4 +206,74 @@ class TranslationsController extends Controller
             Artisan::call($job);
         }
     }
+
+    /**
+     * Import translations.
+     */
+    public function import(Request $request)
+    {
+        // Validate data.
+        $data = $request->validate([
+            'type' => 'required|string|in:replace,append',
+        ]);
+
+        // Set replace flag.
+        $replace = ($data['type'] == 'replace') ? true : false;
+
+        $this->manager->importTranslations($replace);
+    }
+
+    /**
+     * Fix missing translations.
+     */
+    public function fix(Request $request)
+    {
+        // Validate data.
+        $data = $request->validate([
+            'key' => 'required|string',
+            'group' => 'required|string',
+        ]);
+
+        // Get supported locales.
+        $locales = config('nova-translation-manager.locales');
+
+        foreach ($locales as $locale) {
+            Translation::firstOrCreate([
+                'group' => $data['group'],
+                'key' => $data['key'],
+                'locale' => $locale,
+            ]);
+        }
+    }
+
+    /**
+     * Fix missing translations for an entire group.
+     */
+    public function fixGroup(Request $request)
+    {
+        // Validate data.
+        $data = $request->validate([
+            'group' => 'required|string',
+        ]);
+
+        // Get supported locales.
+        $locales = config('nova-translation-manager.locales');
+
+        // Get existing translations.
+        $keys = Translation::select('group', 'key')
+            ->where('group', $data['group'])
+            ->groupBy('group')
+            ->groupBy('key')
+            ->pluck('key');
+
+        foreach ($locales as $locale) {
+            foreach ($keys as $key) {
+                Translation::firstOrCreate([
+                    'group' => $data['group'],
+                    'key' => $key,
+                    'locale' => $locale,
+                ]);
+            }
+        }
+    }
 }
