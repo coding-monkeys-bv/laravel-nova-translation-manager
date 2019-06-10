@@ -90,7 +90,7 @@
                         
                         <heading :level="2" class="pt-8 px-8">{{ __('Update Keyword') }}</heading>
 
-                        <div class="p-8"> {{ selectedKeyword }} - {{ updatedKeyword }}
+                        <div class="p-8">
                             <input class="w-full form-input form-input-bordered p-4" v-model="updatedKeyword">
                         </div>
 
