@@ -92,6 +92,10 @@
                 {{ __('Publish') }}
             </button>
 
+            <button class="btn btn-default btn-primary mr-3" @click="exportAllTranslations">
+                {{ __('Publish All Groups') }}
+            </button>
+
             <button class="btn btn-default btn-primary mr-3" v-if="groupSelected" @click="fixMissingTranslations">
                 {{ __('Fix Translations') }}
             </button>
@@ -512,6 +516,17 @@ export default {
             // Setup data.
             var data = {}
             data.group = this.group
+
+            axios.post(this.apiUrl + 'translations/export', data).then(response => {
+                // Show message.
+                this.$toasted.show('The translations have been exported!', { type: 'success' })
+            });
+        },
+
+        exportAllTranslations() {
+            // Setup data.
+            var data = {}
+            data.group = "*"
 
             axios.post(this.apiUrl + 'translations/export', data).then(response => {
                 // Show message.
