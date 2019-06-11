@@ -115,7 +115,7 @@
                                 {{ translation[defaultLocale].key }}
                             </span>
                         </td>
-                        <td v-for="(locale, index) in locales" @click="openUpdateModal(translation[locale])">
+                        <td v-for="(locale, index) in locales" @click="openUpdateModal(translation[locale])" v-if="translation[locale]">
                             <span class="cursor-pointer" v-if="translation[locale] && translation[locale].value !== null">
                                 <span v-if="translation[locale].value.length > 80">{{ translation[locale].value.substring(0, 80) }}...</span>
                                 <span v-else>{{ translation[locale].value }}</span>
@@ -124,12 +124,18 @@
                                 <em class="text-danger">{{ __('Not Available') }}</em>
                             </span>
                         </td>
+                        <td v-else>
+                            <button class="btn btn-default btn-icon btn-white float-right" @click="fixMissingTranslation(translation)">
+                                {{ __('Fix Translation') }}
+                            </button>
+                        </td>
                         <td class="text-right">      
                             <button class="btn btn-default btn-icon btn-white float-right" @click="openDeleteModal(translation[defaultLocale].key)">
                                 <icon type="delete" class="text-80" />
                             </button>
                         </td>
                     </tr>
+
                     <tr v-else>
                         <td>
                             <span class="text-danger">{{ __('This translation needs fixing') }}</span>
@@ -140,7 +146,8 @@
                                 {{ __('Fix Translation') }}
                             </button>
                         </td>
-                    </tr>                     
+                    </tr>  
+
                 </tbody>
             </table>
 
