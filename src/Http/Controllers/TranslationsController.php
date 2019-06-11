@@ -192,8 +192,14 @@ class TranslationsController extends Controller
             'group' => 'required|string',
         ]);
 
+        // Add support for JSON exports.
+        $json = false;
+        if ($data['group'] === '_json') {
+            $json = true;
+        }
+
         // Export translations to PHP files.
-        $this->manager->exportTranslations($data['group']);
+        $this->manager->exportTranslations($data['group'], $json);
 
         // When JSON files should be generated using the vue-i18n package.
         if (config('nova-translation-manager.vue-i18n.active')) {
