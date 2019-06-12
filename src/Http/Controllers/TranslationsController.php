@@ -88,8 +88,13 @@ class TranslationsController extends Controller
      * @param  string $group
      * @return \Illuminate\Http\Response
      */
-    public function show($group)
+    public function show($group, $subgroup = null)
     {
+        // Concat group and subgroup
+        if (! is_null($subgroup)) {
+            $group = $group.'/'.$subgroup;
+        }
+
         // Get translations by group.
         $data = Translation::where('group', $group)->orderBy('key', 'asc')->get();
 
@@ -176,10 +181,15 @@ class TranslationsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($group, $key)
+    public function destroy($group, $id)
     {
-        // Delete translations
-        Translation::where('group', $group)->where('key', $key)->delete();
+        // Get key by ID.
+        $key = Translation::where('id', $id)->value('key');
+
+        if ($key) {
+            // Delete translations
+            Translation::where('group', $group)->where('key', $key)->delete();
+        }
     }
 
     /**

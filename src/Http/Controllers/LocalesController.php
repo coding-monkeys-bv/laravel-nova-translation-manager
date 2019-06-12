@@ -4,15 +4,26 @@ namespace Voicecode\NovaTranslationManager\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
+use Barryvdh\TranslationManager\Manager;
 use Voicecode\NovaTranslationManager\Models\Translation;
 use Voicecode\NovaTranslationManager\Helpers\TranslationHelper;
 
 class LocalesController extends Controller
 {
     /**
+     * @var \Barryvdh\TranslationManager\Manager
+     */
+    protected $manager;
+
+    public function __construct(Manager $manager)
+    {
+        $this->manager = $manager;
+    }
+
+    /**
      * Get all available locales.
      */
-    public function locales()
+    public function index()
     {
         // Merge app locale and translation locales.
         $locales = TranslationHelper::getLocales();
@@ -21,6 +32,47 @@ class LocalesController extends Controller
         return response()->json([
             'locales' => $locales,
             'defaultLocale' => $defaultLocale,
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store()
+    {
+        $data = request()->validate([
+            'locale' => 'required|string|unique:ltm_translations,locale',
+        ]);
+
+        // Get all keys.
+        $keys = Translation::groupBy('key')->pluck('group', 'key');
+
+        // When there are keys found.
+        if (count($keys) > 0) {
+
+            // Create all translation records.
+            foreach ($keys as $key => $group) {
+                Translation::firstOrCreate([
+                    'status' => 0,
+                    'locale' => $data['locale'],
+                    'group' => $group,
+                    'key' => $key,
+                ]);
+            }
+        } else {
+            Translation::firstOrCreate([
+                'status' => 0,
+                'locale' => $data['locale'],
+                'group' => 'first',
+                'key' => 'placeholder',
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
         ]);
     }
 
