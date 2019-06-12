@@ -88,8 +88,13 @@ class TranslationsController extends Controller
      * @param  string $group
      * @return \Illuminate\Http\Response
      */
-    public function show($group)
+    public function show($group, $subgroup = null)
     {
+        // Concat group and subgroup
+        if (! is_null($subgroup)) {
+            $group = $group.'/'.$subgroup;
+        }
+
         // Get translations by group.
         $data = Translation::where('group', $group)->orderBy('key', 'asc')->get();
 
@@ -176,10 +181,15 @@ class TranslationsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($group, $key)
+    public function destroy($group, $id)
     {
-        // Delete translations
-        Translation::where('group', $group)->where('key', $key)->delete();
+        // Get key by ID.
+        $key = Translation::where('id', $id)->value('key');
+
+        if ($key) {
+            // Delete translations
+            Translation::where('group', $group)->where('key', $key)->delete();
+        }
     }
 
     /**
@@ -192,15 +202,31 @@ class TranslationsController extends Controller
             'group' => 'required|string',
         ]);
 
-        // Add support for JSON exports.
-        $json = false;
-        if ($data['group'] === '_json') {
-            $json = true;
+        // When all groups should be exported.
+        if ($data['group'] == '*') {
+            $this->manager->exportAllTranslations();
+
+        // When a single group should be exported.
+        } else {
+            // Add support for JSON exports.
+            $json = false;
+            if ($data['group'] == '_json') {
+                $json = true;
+            }
+
+            // Export translations to PHP files.
+            $this->manager->exportTranslations($data['group'], $json);
         }
 
-        // Export translations to PHP files.
-        $this->manager->exportTranslations($data['group'], $json);
+        // Create Vue i18n JSON file when needed.
+        $this->exportVuei18n();
+    }
 
+    /**
+     * Export.
+     */
+    public function exportVuei18n()
+    {
         // When JSON files should be generated using the vue-i18n package.
         if (config('nova-translation-manager.vue-i18n.active')) {
             $job = 'vue-i18n:generate';

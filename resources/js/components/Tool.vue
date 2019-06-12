@@ -81,7 +81,25 @@
                     </div>
                 </card>
             </div>
+
+            <div class="w-1/2 px-2 mt-6">
+                <card class="p-6">
+                    <h3 class="mb-4">{{ __('Create Locale') }}</h3>
+                    <div class="flex items-end">
+                        <div class="w-1/3">
+                            <input class="form-control form-input form-input-bordered w-full" v-model="newLocale">
+                        </div>
+                        <div class="w-1/3 px-2">
+                            <button class="btn btn-default btn-primary w-full" @click="createLocale">
+                                {{ __('Create Locale') }}
+                            </button>
+                        </div>
+                    </div>
+                </card>
+            </div>
+
         </div>
+
 
         <div v-if="groupSelected" class="mt-6">
             <button class="btn btn-default btn-primary mr-3" v-if="groupSelected" @click="openCreateModal">
@@ -90,6 +108,10 @@
             
             <button class="btn btn-default btn-primary mr-3" v-if="groupSelected" @click="exportTranslations">
                 {{ __('Publish') }}
+            </button>
+
+            <button class="btn btn-default btn-primary mr-3" @click="exportAllTranslations">
+                {{ __('Publish All Groups') }}
             </button>
 
             <button class="btn btn-default btn-primary mr-3" v-if="groupSelected" @click="fixMissingTranslations">
@@ -130,7 +152,7 @@
                             </button>
                         </td>
                         <td class="text-right">      
-                            <button class="btn btn-default btn-icon btn-white float-right" @click="openDeleteModal(translation[defaultLocale].key)">
+                            <button class="btn btn-default btn-icon btn-white float-right" @click="openDeleteModal(translation[defaultLocale].id)">
                                 <icon type="delete" class="text-80" />
                             </button>
                         </td>
@@ -335,6 +357,7 @@ export default {
             updatedKeyword: null,
             selectedKeyword: null,
             locales: [],
+            newLocale: null,
             defaultLocale: null,
             selectedLocale: null,
             selected: {},
@@ -369,7 +392,7 @@ export default {
             })
         },
 
-        setGroup() {
+        setGroup() {            
             axios.get(this.apiUrl + 'translations/' + this.group).then(response => {
                 this.translations = response.data;
             })
@@ -519,6 +542,17 @@ export default {
             });
         },
 
+        exportAllTranslations() {
+            // Setup data.
+            var data = {}
+            data.group = "*"
+
+            axios.post(this.apiUrl + 'translations/export', data).then(response => {
+                // Show message.
+                this.$toasted.show('The translations have been exported!', { type: 'success' })
+            });
+        },
+
         importTranslations() {
             
             if(this.importType !== null && this.importType !== '') {
@@ -571,6 +605,29 @@ export default {
             });
         },
 
+        createLocale() {
+            if(this.newLocale !== null && this.newLocale !== '') {
+
+                var data = {}
+                data.locale = this.newLocale
+                
+                axios.post(this.apiUrl + 'locales', data).then(response => {
+                    // Reload locales
+                    this.getLocales();
+
+                    // Reset new locale value
+                    this.newLocale = null;
+
+                    // Show message.
+                    this.$toasted.show('The locale has been created!', { type: 'success' })
+                }).catch(error => {
+
+                    // Show message.
+                    this.$toasted.show(error.response.data.errors.locale[0], { type: 'error' })
+                })
+            }
+        },
+
         deleteLocale() {
 
             if(this.selectedLocale !== null && this.selectedLocale !== '') {
@@ -619,9 +676,9 @@ export default {
             this.deleteGroupModalOpened = false;
         },
 
-        openDeleteModal(keyword) {
+        openDeleteModal(id) {
             this.selectedGroup = this.group;
-            this.selectedKeyword = keyword;
+            this.selectedKeyword = id;
             this.deleteModalOpened = true;
         },
 
