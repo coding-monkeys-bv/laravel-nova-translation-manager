@@ -1,4 +1,5 @@
 {
+    "Translation Manager": "Vertalingen",
     "Select A Group": "Groep Selecteren",
     "Create A Group": "Groep Aanmaken",
     "Create Group": "Groep Aanmaken",
@@ -22,5 +23,7 @@
     "Delete Locale": "Taal Verwijderen",
     "Delete This Locale": "Verwijder Deze Taal",
     "Not Available": "Niet Beschikbaar",
-    "Publish All Groups": "Alle Groepen Publiceren"
+    "Publish All Groups": "Alle Groepen Publiceren",
+    "Create Locale": "Taal Toevoegen",
+    "Import Translations": "Vertalingen Importeren"
 }

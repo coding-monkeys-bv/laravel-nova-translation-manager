@@ -1,6 +1,6 @@
 <template>
     <div>
-        <heading class="mb-6">Translation Manager</heading>
+        <heading class="mb-6">{{ __('Translation Manager') }}</heading>
 
         <div class="flex flex-wrap -mx-2">
             <div class="w-1/2 px-2">
