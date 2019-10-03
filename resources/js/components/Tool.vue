@@ -55,18 +55,6 @@
             <div class="w-1/2 px-2 mt-6">
                 <card class="p-6">
                     <h3 class="mb-4">{{ __('Locales') }}</h3>
-                    <!-- <div class="flex items-end">
-                        <div class="w-1/3">
-                            <input class="form-control form-input form-input-bordered w-full" v-model="newGroup">
-                        </div>
-                        <div class="w-1/3 px-2">
-                            <button class="btn btn-default btn-primary w-full" @click="createGroup">
-                                {{ __('Create Locale') }}
-                            </button>
-                        </div>
-                        <div class="w-1/3"></div>
-                    </div> -->
-
                     <div class="flex">
                         <div class="w-1/3">
                             <select class="form-control form-input form-input-bordered w-full" size="1" v-model="selectedLocale">
@@ -110,9 +98,9 @@
                 {{ __('Publish') }}
             </button>
 
-            <button class="btn btn-default btn-primary mr-3" @click="exportAllTranslations">
+            <!-- <button class="btn btn-default btn-primary mr-3" @click="exportAllTranslations">
                 {{ __('Publish All Groups') }}
-            </button>
+            </button> -->
 
             <button class="btn btn-default btn-primary mr-3" v-if="groupSelected" @click="fixMissingTranslations">
                 {{ __('Fix Translations') }}
