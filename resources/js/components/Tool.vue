@@ -165,162 +165,156 @@
         </card>
 
 
-        <portal to="modals">
-            <transition name="fade">
-
-                <modal v-if="updateKeywordModalOpened" class="modal" tabindex="-1" role="dialog">
-                    <card class="w-full">
-                        
-                        <heading :level="2" class="pt-8 px-8">{{ __('Update Keyword') }}</heading>
-
-                        <div class="p-8">
-                            <input class="w-full form-input form-input-bordered p-4" v-model="updatedKeyword">
-                        </div>
-
-                        <div class="bg-30 px-6 py-3 flex">
-                            <div class="flex items-center ml-auto">
-                                <button type="button" @click.prevent="closeUpdateKeywordModal" class="btn text-80 font-normal h-9 px-3 mr-3 btn-link">
-                                    {{ __('Cancel') }}
-                                </button>
-
-                                <button type="submit" @click.prevent="updateKeyword" class="btn btn-default btn-primary">
-                                    {{ __('Save') }}
-                                </button>
-                            </div>
-                        </div>
-                    </card>
-                </modal>
-
-
-                <modal v-if="updateModalOpened" class="modal" tabindex="-1" role="dialog">
-                    <card class="w-full">
-                        
-                        <heading :level="2" class="pt-8 px-8">{{ __('Update Translation') }}</heading>
-
-                        <div class="p-8">
-                            <textarea 
-                                class="w-full form-input form-input-bordered p-4" 
-                                rows="6" cols="90"
-                                v-model="selected.value"
-                            ></textarea>
-                        </div>
-
-                        <div class="bg-30 px-6 py-3 flex">
-                            <div class="flex items-center ml-auto">
-                                <button type="button" @click.prevent="closeUpdateModal" class="btn text-80 font-normal h-9 px-3 mr-3 btn-link">
-                                    {{ __('Cancel') }}
-                                </button>
-
-                                <button type="submit" @click.prevent="updateTranslation" class="btn btn-default btn-primary">
-                                    {{ __('Save') }}
-                                </button>
-                            </div>
-                        </div>
-                    </card>
-                </modal>
-
-                <modal v-if="createModalOpened" class="modal" tabindex="-1" role="dialog">
-                    <card class="w-full">
-                        
-                        <heading :level="2" class="pt-8 px-8">{{ __('Add Keywords') }}</heading>
-
-                        <div class="px-8 mt-3">
-                            <p>{{ __('Add 1 key per line, without the group prefix') }}</p>
-                        </div>
-
-                        <div class="p-8">
-                            <textarea 
-                                class="w-full form-input form-input-bordered p-4" 
-                                rows="6" cols="90"
-                                v-model="keywords"
-                            ></textarea>
-                        </div>
-
-                        <div class="bg-30 px-6 py-3 flex">
-                            <div class="flex items-center ml-auto">
-                                <button type="button" @click.prevent="closeCreateModal" class="btn text-80 font-normal h-9 px-3 mr-3 btn-link">
-                                    {{ __('Cancel') }}
-                                </button>
-
-                                <button type="submit" @click.prevent="createKeywords" class="btn btn-default btn-primary">
-                                    {{ __('Save') }}
-                                </button>
-                            </div>
-                        </div>
-                    </card>
-                </modal>
-
-                <modal v-if="deleteModalOpened" class="modal" tabindex="-1" role="dialog">
-                    <card class="w-full">
-
-                        <heading :level="2" class="pt-8 px-8">{{ __('Delete This Translation') }}</heading>
-
-                        <div class="px-8 mt-3 mb-3">
-                            <p>{{ __('Are you sure?') }}</p>
-                        </div>
-
-                        <div class="bg-30 px-6 py-3 flex">
-                            <div class="flex items-center ml-auto">
-                                <button type="button" @click.prevent="closeDeleteModal" class="btn text-80 font-normal h-9 px-3 mr-3 btn-link">
-                                    {{ __('Cancel') }}
-                                </button>
-
-                                <button type="submit" @click.prevent="deleteKeyword" class="btn btn-default btn-danger">
-                                    {{ __('Delete') }}
-                                </button>
-                            </div>
-                        </div>
-                    </card>
-                </modal> 
-
-                <modal v-if="deleteGroupModalOpened" class="modal" tabindex="-1" role="dialog">
-                    <card class="w-full">
-
-                        <heading :level="2" class="pt-8 px-8">{{ __('Delete This Group') }}</heading>
-
-                        <div class="px-8 mt-3 mb-3">
-                            <p>{{ __('Are you sure?') }}</p>
-                        </div>
-
-                        <div class="bg-30 px-6 py-3 flex">
-                            <div class="flex items-center ml-auto">
-                                <button type="button" @click.prevent="closeDeleteGroupModal" class="btn text-80 font-normal h-9 px-3 mr-3 btn-link">
-                                    {{ __('Cancel') }}
-                                </button>
-
-                                <button type="submit" @click.prevent="deleteGroup" class="btn btn-default btn-danger">
-                                    {{ __('Delete') }}
-                                </button>
-                            </div>
-                        </div>
-                    </card>
-                </modal>   
-
-                <modal v-if="deleteLocaleModalOpened" class="modal" tabindex="-1" role="dialog">
-                    <card class="w-full">
-
-                        <heading :level="2" class="pt-8 px-8">{{ __('Delete This Locale') }}</heading>
-
-                        <div class="px-8 mt-3 mb-3">
-                            <p>{{ __('Are you sure?') }}</p>
-                        </div>
-
-                        <div class="bg-30 px-6 py-3 flex">
-                            <div class="flex items-center ml-auto">
-                                <button type="button" @click.prevent="closeDeleteLocaleModal" class="btn text-80 font-normal h-9 px-3 mr-3 btn-link">
-                                    {{ __('Cancel') }}
-                                </button>
-
-                                <button type="submit" @click.prevent="deleteLocale" class="btn btn-default btn-danger">
-                                    {{ __('Delete') }}
-                                </button>
-                            </div>
-                        </div>
-                    </card>
-                </modal>               
+        <modal v-if="updateModalOpened" class="modal" tabindex="-1" role="dialog">
+            <card class="w-full">
                 
-            </transition>
-        </portal>
+                <heading :level="2" class="pt-8 px-8">{{ __('Update Translation') }}</heading>
+
+                <div class="p-8">
+                    <textarea 
+                        class="w-full form-input form-input-bordered p-4" 
+                        rows="6" cols="90"
+                        v-model="selected.value"
+                    ></textarea>
+                </div>
+
+                <div class="bg-30 px-6 py-3 flex">
+                    <div class="flex items-center ml-auto">
+                        <button type="button" @click.prevent="closeUpdateModal" class="btn text-80 font-normal h-9 px-3 mr-3 btn-link">
+                            {{ __('Cancel') }}
+                        </button>
+
+                        <button type="submit" @click.prevent="updateTranslation(selected)" class="btn btn-default btn-primary">
+                            {{ __('Save') }}
+                        </button>
+                    </div>
+                </div>
+            </card>
+        </modal>
+
+        <modal v-if="updateKeywordModalOpened" class="modal" tabindex="-1" role="dialog">
+            <card class="w-full">
+                
+                <heading :level="2" class="pt-8 px-8">{{ __('Update Keyword') }}</heading>
+
+                <div class="p-8">
+                    <input class="w-full form-input form-input-bordered p-4" v-model="updatedKeyword">
+                </div>
+
+                <div class="bg-30 px-6 py-3 flex">
+                    <div class="flex items-center ml-auto">
+                        <button type="button" @click.prevent="closeUpdateKeywordModal" class="btn text-80 font-normal h-9 px-3 mr-3 btn-link">
+                            {{ __('Cancel') }}
+                        </button>
+
+                        <button type="submit" @click.prevent="updateKeyword" class="btn btn-default btn-primary">
+                            {{ __('Save') }}
+                        </button>
+                    </div>
+                </div>
+            </card>
+        </modal>
+
+        <modal v-if="createModalOpened" class="modal" tabindex="-1" role="dialog">
+            <card class="w-full">
+                
+                <heading :level="2" class="pt-8 px-8">{{ __('Add Keywords') }}</heading>
+
+                <div class="px-8 mt-3">
+                    <p>{{ __('Add 1 key per line, without the group prefix') }}</p>
+                </div>
+
+                <div class="p-8">
+                    <textarea 
+                        class="w-full form-input form-input-bordered p-4" 
+                        rows="6" cols="90"
+                        v-model="keywords"
+                    ></textarea>
+                </div>
+
+                <div class="bg-30 px-6 py-3 flex">
+                    <div class="flex items-center ml-auto">
+                        <button type="button" @click.prevent="closeCreateModal" class="btn text-80 font-normal h-9 px-3 mr-3 btn-link">
+                            {{ __('Cancel') }}
+                        </button>
+
+                        <button type="submit" @click.prevent="createKeywords" class="btn btn-default btn-primary">
+                            {{ __('Save') }}
+                        </button>
+                    </div>
+                </div>
+            </card>
+        </modal>
+
+        <modal v-if="deleteModalOpened" class="modal" tabindex="-1" role="dialog">
+            <card class="w-full">
+
+                <heading :level="2" class="pt-8 px-8">{{ __('Delete This Translation') }}</heading>
+
+                <div class="px-8 mt-3 mb-3">
+                    <p>{{ __('Are you sure?') }}</p>
+                </div>
+
+                <div class="bg-30 px-6 py-3 flex">
+                    <div class="flex items-center ml-auto">
+                        <button type="button" @click.prevent="closeDeleteModal" class="btn text-80 font-normal h-9 px-3 mr-3 btn-link">
+                            {{ __('Cancel') }}
+                        </button>
+
+                        <button type="submit" @click.prevent="deleteKeyword" class="btn btn-default btn-danger">
+                            {{ __('Delete') }}
+                        </button>
+                    </div>
+                </div>
+            </card>
+        </modal> 
+
+        <modal v-if="deleteGroupModalOpened" class="modal" tabindex="-1" role="dialog">
+            <card class="w-full">
+
+                <heading :level="2" class="pt-8 px-8">{{ __('Delete This Group') }}</heading>
+
+                <div class="px-8 mt-3 mb-3">
+                    <p>{{ __('Are you sure?') }}</p>
+                </div>
+
+                <div class="bg-30 px-6 py-3 flex">
+                    <div class="flex items-center ml-auto">
+                        <button type="button" @click.prevent="closeDeleteGroupModal" class="btn text-80 font-normal h-9 px-3 mr-3 btn-link">
+                            {{ __('Cancel') }}
+                        </button>
+
+                        <button type="submit" @click.prevent="deleteGroup" class="btn btn-default btn-danger">
+                            {{ __('Delete') }}
+                        </button>
+                    </div>
+                </div>
+            </card>
+        </modal>   
+
+        <modal v-if="deleteLocaleModalOpened" class="modal" tabindex="-1" role="dialog">
+            <card class="w-full">
+
+                <heading :level="2" class="pt-8 px-8">{{ __('Delete This Locale') }}</heading>
+
+                <div class="px-8 mt-3 mb-3">
+                    <p>{{ __('Are you sure?') }}</p>
+                </div>
+
+                <div class="bg-30 px-6 py-3 flex">
+                    <div class="flex items-center ml-auto">
+                        <button type="button" @click.prevent="closeDeleteLocaleModal" class="btn text-80 font-normal h-9 px-3 mr-3 btn-link">
+                            {{ __('Cancel') }}
+                        </button>
+
+                        <button type="submit" @click.prevent="deleteLocale" class="btn btn-default btn-danger">
+                            {{ __('Delete') }}
+                        </button>
+                    </div>
+                </div>
+            </card>
+        </modal>               
+                
 
     </div>
 </template>
@@ -365,7 +359,7 @@ export default {
         this.getLocales();
     },
 
-    methods: {
+    methods: {        
 
         getGroups() {
             axios.get(this.apiUrl + 'translations').then(response => { 
