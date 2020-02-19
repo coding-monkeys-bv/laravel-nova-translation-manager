@@ -14,7 +14,7 @@ Then, publish the config file and make sure you set the correct value for using 
 php artisan vendor:publish --provider="Voicecode\NovaTranslationManager\ToolServiceProvider"
 ```
 
-While the Laravel Translation Manager is mandatory, this will be installed automatically when installing this tool. Make sure to publish the files provided by Translation Manager and run the migrations.
+While this tool is build upon Laravel Translation Manager, this will be installed automatically when installing this tool. Make sure to publish the files provided by Translation Manager and run the migrations.
 
 ```
 php artisan vendor:publish --provider="Barryvdh\TranslationManager\ManagerServiceProvider" --tag=migrations

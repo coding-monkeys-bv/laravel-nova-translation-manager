@@ -126,7 +126,7 @@
                             </span>
                         </td>
                         <td v-for="(locale, index) in locales" @click="openUpdateModal(translation[locale])" v-if="translation[locale]">
-                            <span class="cursor-pointer" v-if="translation[locale] && translation[locale].value !== null">
+                            <span :class="['cursor-pointer', translation[locale].status == 1 ? 'font-bold' : '']" v-if="translation[locale] && translation[locale].value !== null">
                                 <span v-if="translation[locale].value.length > 80">{{ translation[locale].value.substring(0, 80) }}...</span>
                                 <span v-else>{{ translation[locale].value }}</span>
                             </span>
@@ -325,7 +325,7 @@ export default {
     computed: {
         groupSelected() {
             return this.group !== null;
-        }
+        },
     },
         
     data() {
@@ -521,6 +521,9 @@ export default {
             axios.post(this.apiUrl + 'translations/export', data).then(response => {
                 // Show message.
                 this.$toasted.show('The translations have been exported!', { type: 'success' })
+
+                // Reload translations.
+                this.setGroup();
             });
         },
 

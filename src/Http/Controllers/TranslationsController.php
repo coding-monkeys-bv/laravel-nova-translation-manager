@@ -2,12 +2,12 @@
 
 namespace Voicecode\NovaTranslationManager\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Artisan;
 use Barryvdh\TranslationManager\Manager;
-use Voicecode\NovaTranslationManager\Models\Translation;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Voicecode\NovaTranslationManager\Helpers\TranslationHelper;
+use Voicecode\NovaTranslationManager\Models\Translation;
 
 class TranslationsController extends Controller
 {
@@ -70,6 +70,7 @@ class TranslationsController extends Controller
             // Add the keyword for all locales.
             foreach ($locales as $locale) {
                 Translation::firstOrCreate([
+                    'status' => 1,
                     'locale' => $locale,
                     'group' => $data['group'],
                     'key' => $key,
@@ -136,6 +137,7 @@ class TranslationsController extends Controller
 
         // If an empty string is given, make sure it's null.
         $data['value'] = ($data['value'] == '') ? null : $data['value'];
+        $data['status'] = 1;
 
         // Update the translation.
         $translation->update($data);
