@@ -386,11 +386,19 @@ export default {
         this.getLocales();
     },
     methods: {     
+<<<<<<< HEAD
 
         onFileChange(e) {
             this.file = e.target.files[0];
         },
 
+=======
+
+        onFileChange(e) {
+            this.file = e.target.files[0];
+        },
+
+>>>>>>> 2589ca8da46dab503f1ea9d6ad1722032aded053
         uploadCSV(e) {
             const config = {
                 headers: {
@@ -403,12 +411,17 @@ export default {
             formData.append('publish', this.publishAfterUpload);
 
             Nova.request().post(this.apiUrl + 'upload', formData, config).then(response => {
+<<<<<<< HEAD
                 // Show message.
                 this.$toasted.show('The file has been processed!', { type: 'success' })
             }).catch(error => {
                 // Show message.
                 this.$toasted.show('Something went wrong here...', { type: 'error' })
             })
+=======
+                console.log(response.data);
+            });
+>>>>>>> 2589ca8da46dab503f1ea9d6ad1722032aded053
 
             this.file = null;
         }, 
