@@ -11,7 +11,7 @@ composer require voicecode/laravel-nova-translation-manager
 Then, publish the config file and make sure you set the correct value for using the Vue i18n package.
 
 ```
-php artisan vendor:publish --provider="Voicecode\NovaTranslationManager\ToolServiceProvider"
+php artisan vendor:publish --provider="Voicecode\LaravelNovaTranslationsManager\ToolServiceProvider"
 ```
 
 While this tool is build upon Laravel Translation Manager, this will be installed automatically when installing this tool. Make sure to publish the files provided by Translation Manager and run the migrations.
@@ -24,7 +24,7 @@ php artisan migrate
 Now in NovaServiceProvider, make sure you register this tool in the tools method.
 
 ```
-use Voicecode\NovaTranslationManager\NovaTranslationManager;
+use Voicecode\LaravelNovaTranslationsManager\LaravelNovaTranslationsManager;
 
 /**
  * Get the tools that should be listed in the Nova sidebar.
@@ -34,7 +34,7 @@ use Voicecode\NovaTranslationManager\NovaTranslationManager;
 public function tools()
 {
     return [
-        new NovaTranslationManager(),
+        new LaravelNovaTranslationsManager(),
     ];
 }
 ```

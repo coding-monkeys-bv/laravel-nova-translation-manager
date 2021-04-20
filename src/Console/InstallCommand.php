@@ -1,9 +1,9 @@
 <?php
 
-namespace Voicecode\NovaTranslationManager\Console;
+namespace Voicecode\LaravelNovaTranslationsManager\Console;
 
 use Illuminate\Console\Command;
-use Voicecode\NovaTranslationManager\Models\Translation;
+use Voicecode\LaravelNovaTranslationsManager\Models\Translation;
 
 class InstallCommand extends Command
 {

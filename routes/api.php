@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::namespace('Voicecode\NovaTranslationManager\Http\Controllers')->group(function () {
+Route::namespace('Voicecode\LaravelNovaTranslationsManager\Http\Controllers')->group(function () {
     // Groups Routes.
     Route::delete('groups/{group}', 'GroupsController@destroy')->where(['group' => '[a-z0-9-]+']);
     Route::resource('groups', 'GroupsController');
@@ -21,4 +21,7 @@ Route::namespace('Voicecode\NovaTranslationManager\Http\Controllers')->group(fun
     Route::get('translations/{group}/{subgroup?}', 'TranslationsController@show');
     Route::delete('translations/{group}/{key}', 'TranslationsController@destroy')->where(['group' => '[a-z0-9-]+'])->where(['key' => '[a-z0-9-]+']);
     Route::resource('translations', 'TranslationsController');
+
+    // Upload CSV.
+    Route::post('upload', 'UploadController@upload');
 });

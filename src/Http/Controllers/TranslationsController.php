@@ -1,13 +1,13 @@
 <?php
 
-namespace Voicecode\NovaTranslationManager\Http\Controllers;
+namespace Voicecode\LaravelNovaTranslationsManager\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Barryvdh\TranslationManager\Manager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
-use Voicecode\NovaTranslationManager\Helpers\TranslationHelper;
-use Voicecode\NovaTranslationManager\Models\Translation;
+use Voicecode\LaravelNovaTranslationsManager\Helpers\TranslationHelper;
+use Voicecode\LaravelNovaTranslationsManager\Models\Translation;
 
 class TranslationsController extends Controller
 {

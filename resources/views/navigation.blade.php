@@ -1,4 +1,4 @@
-<router-link tag="h3" :to="{name: 'nova-translation-manager'}" class="cursor-pointer flex items-center font-normal dim text-white mb-6 text-base no-underline">
+<router-link tag="h3" :to="{name: 'laravel-nova-translations-manager'}" class="cursor-pointer flex items-center font-normal dim text-white mb-6 text-base no-underline">
     <svg class="sidebar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 511.626 511.627">
         <g>
             <path fill="var(--sidebar-icon)" d="M477.364,127.481c-22.839-28.072-53.864-50.248-93.072-66.522c-39.208-16.274-82.036-24.41-128.479-24.41
@@ -16,10 +16,9 @@
             c-24.744-14.093-43.918-30.793-57.53-50.114c-13.61-19.315-20.412-39.638-20.412-60.954c0-26.077,9.945-50.343,29.834-72.803
             c19.895-22.458,46.729-40.303,80.515-53.531c33.786-13.229,70.089-19.849,108.92-19.849c38.828,0,75.13,6.617,108.914,19.845
             c33.783,13.229,60.62,31.073,80.517,53.531c19.89,22.46,29.834,46.727,29.834,72.802S465.133,269.615,445.244,292.075z"/>
-            
         </g>
     </svg>
     <span class="sidebar-label">
-        {{ __('Translation Manager') }}
+        {{ __('Translations') }}
     </span>
 </router-link>

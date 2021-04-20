@@ -1,9 +1,9 @@
 <?php
 
-namespace Voicecode\NovaTranslationManager\Http\Middleware;
+namespace Voicecode\LaravelNovaTranslationsManager\Http\Middleware;
 
 use Laravel\Nova\Nova;
-use Voicecode\NovaTranslationManager\NovaTranslationManager;
+use Voicecode\LaravelNovaTranslationsManager\LaravelNovaTranslationsManager;
 
 class Authorize
 {
@@ -24,11 +24,11 @@ class Authorize
     /**
      * Determine whether this tool belongs to the package.
      *
-     * @param \Laravel\Nova\Tool $tool
+     * @param  \Laravel\Nova\Tool  $tool
      * @return bool
      */
     public function matchesTool($tool)
     {
-        return $tool instanceof NovaTranslationManager;
+        return $tool instanceof LaravelNovaTranslationsManager;
     }
 }

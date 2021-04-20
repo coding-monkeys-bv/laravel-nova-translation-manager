@@ -1,12 +1,12 @@
 <?php
 
-namespace Voicecode\NovaTranslationManager\Http\Controllers;
+namespace Voicecode\LaravelNovaTranslationsManager\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Request;
 use Barryvdh\TranslationManager\Manager;
-use Voicecode\NovaTranslationManager\Models\Translation;
-use Voicecode\NovaTranslationManager\Helpers\TranslationHelper;
+use Illuminate\Support\Facades\Request;
+use Voicecode\LaravelNovaTranslationsManager\Helpers\TranslationHelper;
+use Voicecode\LaravelNovaTranslationsManager\Models\Translation;
 
 class LocalesController extends Controller
 {
@@ -48,7 +48,7 @@ class LocalesController extends Controller
         ]);
 
         // Get all keys.
-        $keys = Translation::groupBy('key')->pluck('group', 'key');
+        $keys = Translation::groupBy('group', 'key')->pluck('group', 'key');
 
         // When there are keys found.
         if (count($keys) > 0) {

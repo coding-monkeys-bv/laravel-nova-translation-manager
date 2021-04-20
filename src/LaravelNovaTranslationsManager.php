@@ -1,11 +1,11 @@
 <?php
 
-namespace Voicecode\NovaTranslationManager;
+namespace Voicecode\LaravelNovaTranslationsManager;
 
 use Laravel\Nova\Nova;
 use Laravel\Nova\Tool;
 
-class NovaTranslationManager extends Tool
+class LaravelNovaTranslationsManager extends Tool
 {
     /**
      * Perform any tasks that need to happen when the tool is booted.
@@ -14,8 +14,8 @@ class NovaTranslationManager extends Tool
      */
     public function boot()
     {
-        Nova::script('nova-translation-manager', __DIR__.'/../dist/js/tool.js');
-        Nova::style('nova-translation-manager', __DIR__.'/../dist/css/tool.css');
+        Nova::script('laravel-nova-translations-manager', __DIR__.'/../dist/js/tool.js');
+        Nova::style('laravel-nova-translations-manager', __DIR__.'/../dist/css/tool.css');
     }
 
     /**
@@ -25,6 +25,6 @@ class NovaTranslationManager extends Tool
      */
     public function renderNavigation()
     {
-        return view('nova-translation-manager::navigation');
+        return view('laravel-nova-translations-manager::navigation');
     }
 }

@@ -7,7 +7,7 @@
                 <card class="p-6">
                     <h3 class="mb-4">{{ __('Import Translations') }}</h3>
                     <div class="flex items-end">
-                        <div class="w-1/3">
+                        <div class="w-2/3">
                             <select class="form-control form-input form-input-bordered w-full" size="1" v-model="importType">
                                 <option value="replace">{{ __('Replace') }}</option>
                                 <option value="append">{{ __('Append') }}</option>
@@ -24,9 +24,9 @@
 
             <div class="w-1/2 px-2">                
                 <card class="p-6">
-                    <h3 class="mb-4">{{ __('Select A Group') }}</h3>
+                    <h3 class="mb-4">{{ __('Select Group') }}</h3>
                     <div class="flex items-end">
-                        <div class="w-1/2">
+                        <div class="w-2/3">
                             <select class="form-control form-input form-input-bordered w-full" size="1" v-model="group" @change="setGroup">
                                 <option :value="item" v-for="(item, index) in groups">{{ item }}</option>
                             </select>
@@ -37,33 +37,32 @@
 
             <div class="w-1/2 px-2 mt-6">
                 <card class="p-6">
-                    <h3 class="mb-4">{{ __('Create A Group') }}</h3>
+                    <h3 class="mb-4">{{ __('Create Group') }}</h3>
                     <div class="flex items-end">
-                        <div class="w-1/3">
+                        <div class="w-2/3">
                             <input class="form-control form-input form-input-bordered w-full" v-model="newGroup">
                         </div>
                         <div class="w-1/3 px-2">
                             <button class="btn btn-default btn-primary w-full" @click="createGroup">
-                                {{ __('Create Group') }}
+                                {{ __('Create') }}
                             </button>
                         </div>
-                        <div class="w-1/3"></div>
                     </div>
                 </card>
             </div>
 
             <div class="w-1/2 px-2 mt-6">
                 <card class="p-6">
-                    <h3 class="mb-4">{{ __('Locales') }}</h3>
+                    <h3 class="mb-4">{{ __('Delete Locale') }}</h3>
                     <div class="flex">
-                        <div class="w-1/3">
+                        <div class="w-2/3">
                             <select class="form-control form-input form-input-bordered w-full" size="1" v-model="selectedLocale">
                                 <option :value="locale" v-for="(locale, index) in locales">{{ locale }}</option>
                             </select>
                         </div>
                         <div class="w-1/3 px-2">
-                            <button class="btn btn-default btn-danger" @click="openDeleteLocaleModal">
-                                {{ __('Delete Locale') }}
+                            <button class="btn btn-default btn-danger w-full" @click="openDeleteLocaleModal">
+                                {{ __('Delete') }}
                             </button>
                         </div>
                     </div>
@@ -74,15 +73,36 @@
                 <card class="p-6">
                     <h3 class="mb-4">{{ __('Create Locale') }}</h3>
                     <div class="flex items-end">
-                        <div class="w-1/3">
+                        <div class="w-2/3">
                             <input class="form-control form-input form-input-bordered w-full" v-model="newLocale">
                         </div>
                         <div class="w-1/3 px-2">
                             <button class="btn btn-default btn-primary w-full" @click="createLocale">
-                                {{ __('Create Locale') }}
+                                {{ __('Create') }}
                             </button>
                         </div>
                     </div>
+                </card>
+            </div>
+
+            <!-- Upload CSV -->
+            <div class="w-1/2 px-2 mt-6">
+                <card class="p-6">
+                    <h3 class="mb-4">{{ __('Upload CSV') }}</h3>
+                    <div class="flex items-end mb-4">
+                        <div class="w-2/3">
+                            <input type="file" class="form-control form-input form-input-bordered w-full" v-on:change="onFileChange">
+                        </div>
+                        <div class="w-1/3 px-2">
+                            <button class="btn btn-default btn-primary w-full" @click="uploadCSV">
+                                {{ __('Upload') }}
+                            </button>
+                        </div>
+                    </div>
+                    <label for="publish-after-upload">
+                        <input type="checkbox" id="publish-after-upload" name="publish-after-upload" v-model="publishAfterUpload" :true-value="true" :false-value="false"> 
+                        {{ __('Publish after upload') }}
+                    </label>
                 </card>
             </div>
 
@@ -321,6 +341,11 @@
 
 <script>
 export default {
+    metaInfo() {
+        return {
+          title: 'Translations Manager',
+        }
+    },
 
     computed: {
         groupSelected() {
@@ -330,6 +355,7 @@ export default {
         
     data() {
         return {
+            file: null,
             group: null,
             groups: [],
             newGroup: null,
@@ -350,7 +376,8 @@ export default {
             deleteGroupModalOpened: false,
             deleteLocaleModalOpened: false,
             updateKeywordModalOpened: false,
-            apiUrl: '/voicecode/nova-translation-manager/',
+            apiUrl: '/nova-vendor/laravel-nova-translations-manager/',
+            publishAfterUpload: true,
         }
     },
 
@@ -358,13 +385,34 @@ export default {
         this.getGroups();
         this.getLocales();
     },
+    methods: {     
 
-    methods: {        
+        onFileChange(e) {
+            this.file = e.target.files[0];
+        },
+
+        uploadCSV(e) {
+            const config = {
+                headers: {
+                    'content-type': 'multipart/form-data',
+                }
+            }
+
+            let formData = new FormData();
+            formData.append('file', this.file);
+            formData.append('publish', this.publishAfterUpload);
+
+            Nova.request().post(this.apiUrl + 'upload', formData, config).then(response => {
+                console.log(response.data);
+            });
+
+            this.file = null;
+        }, 
 
         getGroups() {
-            axios.get(this.apiUrl + 'translations').then(response => { 
+            Nova.request().get(this.apiUrl + 'translations').then(response => {
                 this.groups = response.data;
-            })
+            });
         },
 
         getLocales() {
