@@ -57,7 +57,7 @@ class UploadRequest extends FormRequest
                     'key' => $csvLine[2],
                 ], [
                     'value' => $csvLine[3],
-                    'status' => (request('publish') == 'true') ? 1 : 0, // Mark as updated.
+                    'status' => 1, // Mark as updated, not published.
                 ]);
 
                 // Add group to publishable groups.
