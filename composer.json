@@ -1,12 +1,13 @@
 {
-    "name": "voicecode/laravel-nova-translation-manager",
-    "description": "A translation manament tool for Laravel Nova.",
+    "name": "voicecode/laravel-nova-translations-manager",
+    "description": "A translation management tool for Laravel Nova.",
     "keywords": [
         "laravel",
         "nova",
         "translations",
         "translation",
-        "translation manager"
+        "translation manager",
+        "nova"
     ],
     "license": "MIT",
     "authors": [
@@ -16,18 +17,18 @@
         }
     ],
     "require": {
-        "php": ">=7.1.0",
-        "barryvdh/laravel-translation-manager": "^0.5"
+        "barryvdh/laravel-translation-manager": "^0.5",
+        "php": ">=7.1.0"
     },
     "autoload": {
         "psr-4": {
-            "Voicecode\\NovaTranslationManager\\": "src/"
+            "Voicecode\\LaravelNovaTranslationsManager\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Voicecode\\NovaTranslationManager\\ToolServiceProvider"
+                "Voicecode\\LaravelNovaTranslationsManager\\ToolServiceProvider"
             ]
         }
     },

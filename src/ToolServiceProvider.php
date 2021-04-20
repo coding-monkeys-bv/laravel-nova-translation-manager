@@ -1,12 +1,13 @@
 <?php
 
-namespace Voicecode\NovaTranslationManager;
+namespace Voicecode\LaravelNovaTranslationsManager;
 
-use Laravel\Nova\Nova;
-use Laravel\Nova\Events\ServingNova;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Voicecode\NovaTranslationManager\Http\Middleware\Authorize;
+use Laravel\Nova\Events\ServingNova;
+use Laravel\Nova\Nova;
+use Voicecode\LaravelNovaTranslationsManager\Console\InstallCommand;
+use Voicecode\LaravelNovaTranslationsManager\Http\Middleware\Authorize;
 
 class ToolServiceProvider extends ServiceProvider
 {
@@ -17,7 +18,8 @@ class ToolServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'nova-translation-manager');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-nova-translations-manager');
+
         $this->publishConfiguration();
 
         $this->app->booted(function () {
@@ -63,7 +65,7 @@ class ToolServiceProvider extends ServiceProvider
         }
 
         Route::middleware(['nova', Authorize::class])
-                ->prefix('voicecode/nova-translation-manager')
+                ->prefix('nova-vendor/laravel-nova-translations-manager')
                 ->group(__DIR__.'/../routes/api.php');
     }
 
@@ -78,7 +80,7 @@ class ToolServiceProvider extends ServiceProvider
 
         // Register commands.
         $this->app->singleton('command.translation-manager.install', function ($app) {
-            return new Console\InstallCommand($app['translation-manager']);
+            return new InstallCommand($app['translation-manager']);
         });
 
         $this->commands('command.translation-manager.install');

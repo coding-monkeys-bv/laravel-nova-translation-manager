@@ -1,9 +1,9 @@
 <?php
 
-namespace Voicecode\NovaTranslationManager\Helpers;
+namespace Voicecode\LaravelNovaTranslationsManager\Helpers;
 
 use Illuminate\Support\Str;
-use Voicecode\NovaTranslationManager\Models\Translation;
+use Voicecode\LaravelNovaTranslationsManager\Models\Translation;
 
 class TranslationHelper
 {

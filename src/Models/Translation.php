@@ -1,6 +1,6 @@
 <?php
 
-namespace Voicecode\NovaTranslationManager\Models;
+namespace Voicecode\LaravelNovaTranslationsManager\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,6 +13,6 @@ class Translation extends Model
     ];
 
     protected $dates = [
-        'created_at', 'updated_at'
+        'created_at', 'updated_at',
     ];
 }

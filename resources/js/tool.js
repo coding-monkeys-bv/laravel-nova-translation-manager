@@ -1,12 +1,10 @@
 Nova.booting((Vue, router, store) => {
-
-    Vue.config.devtools = true
-
-    router.addRoutes([
-        {
-            name: 'nova-translation-manager',
-            path: '/nova-translation-manager',
-            component: require('./components/Tool'),
-        },
-    ])
+  Vue.config.devtools = true
+  router.addRoutes([
+    {
+      name: 'laravel-nova-translations-manager',
+      path: '/laravel-nova-translations-manager',
+      component: require('./components/Tool'),
+    },
+  ])
 })
